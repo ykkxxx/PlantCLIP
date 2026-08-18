@@ -1,0 +1,34 @@
+# ============================================================
+# Baseline C：CLIP Zero-shot（OpenCLIP ViT-B/32）
+# 目的：验证原始 CLIP 直接迁移能力（文档第 4.1 节）
+# 说明：冻结全部参数，仅做推理，不训练。
+#       文本侧使用 prompt.template 生成类别描述，取最高相似度。
+# ============================================================
+
+experiment:
+  name: "clip_zeroshot"
+
+model:
+  type: "clip"             # 使用 CLIP 预处理
+  clip_backbone: "ViT-B/32"
+  pretrained: "openai"     # open_clip 预训练权重来源
+  zero_shot: true          # 冻结权重，仅推理
+  num_classes: 38
+
+data:
+  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"
+
+# Zero-shot 不训练；此处仅保留批次/种子，供 test.py 使用
+training:
+  epochs: 0
+  batch_size: 64
+  seed: 42
+
+# 文本 Prompt 模板（文档第 9 节）。{} 会被替换为具体病害类别。
+prompt:
+  template: "a photo of a diseased {} leaf"
+  # 备用模板（后续 Prompt 实验时使用）
+  templates:
+    - "a photo of a diseased {} leaf"
+    - "a close-up image of {} disease on plant leaf"
+    - "a plant leaf infected with {}"

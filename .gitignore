@@ -1,0 +1,17 @@
+# ========== Python ==========
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ========== 训练产物（不纳入版本管理） ==========
+checkpoints/
+logs/
+results/
+split/
+
+# ========== 环境/编辑器 ==========
+.DS_Store
+.idea/
+.vscode/

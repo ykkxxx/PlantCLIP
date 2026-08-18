@@ -1,0 +1,16 @@
+# ========== 基础依赖（AutoDL: Ubuntu 20.04 / Python 3.8 / CUDA 11.3）==========
+# AutoDL 镜像通常已预装 torch，若未安装请按官方镜像安装命令处理
+torch==1.10.0
+torchvision==0.11.0
+
+numpy
+pillow
+pyyaml
+matplotlib
+tqdm
+
+# ========== CLIP 依赖（第二阶段 CLIP 实验时才需要）==========
+# 注意：open-clip-torch 新版本可能要求更高 Python/PyTorch 版本，
+#       若安装失败，请先尝试降级（如 open-clip-torch==0.2.2）或升级 PyTorch。
+# open-clip-torch
+# openai-clip  （备选，Anthropic 说明：OpenCLIP 优先）

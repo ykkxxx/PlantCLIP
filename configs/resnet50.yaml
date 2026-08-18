@@ -1,0 +1,26 @@
+# ============================================================
+# Baseline A：ResNet50（ImageNet 预训练）
+# 目的：传统 CNN 分类基线（文档第 4.1 节）
+# ============================================================
+
+experiment:
+  name: "resnet50"
+
+model:
+  type: "cnn"              # cnn / clip（决定使用哪种预处理与训练流程）
+  name: "resnet50"         # torchvision.models.resnet50
+  pretrained: true
+  num_classes: 38          # 运行时由数据集自动推断，此处仅为记录
+
+data:
+  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"
+
+training:
+  epochs: 50
+  batch_size: 64
+  optimizer: "adam"
+  lr: 1e-3
+  weight_decay: 1e-4
+  lr_scheduler: "cosine"
+  early_stopping_patience: 10
+  seed: 42

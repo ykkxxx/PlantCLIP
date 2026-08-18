@@ -1,0 +1,27 @@
+# ============================================================
+# Baseline B：Vision Transformer ViT-B/16（ImageNet 预训练）
+# 目的：Transformer 视觉模型基线（文档第 4.1 节）
+# 说明：使用 torchvision 内置 vit_b_16 权重，做全量微调。
+# ============================================================
+
+experiment:
+  name: "vit_b16"
+
+model:
+  type: "cnn"              # cnn / clip
+  name: "vit_b_16"         # torchvision.models.vit_b_16
+  pretrained: true
+  num_classes: 38
+
+data:
+  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"
+
+training:
+  epochs: 50
+  batch_size: 64
+  optimizer: "adam"
+  lr: 3e-4                 # ViT 通常需要更小学习率
+  weight_decay: 1e-4
+  lr_scheduler: "cosine"
+  early_stopping_patience: 10
+  seed: 42

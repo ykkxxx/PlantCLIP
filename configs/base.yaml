@@ -1,0 +1,39 @@
+# ============================================================
+# PlantDisease-CLIP 公共基础配置
+#
+# 约定：train.py（第二阶段实现）将先加载本文件作为默认值，
+#       再用各实验配置文件（resnet50.yaml 等）覆盖相同字段。
+#       因此实验配置只需写差异字段，其余继承自本文件。
+# ============================================================
+
+# ---------- 数据 ----------
+data:
+  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"   # PlantVillage color 根目录 (标准 ImageFolder)
+  image_size: 224                    # 统一输入分辨率 224x224 RGB（文档第8节要求）
+  num_workers: 8                     # DataLoader 加载线程数
+
+  # 数据划分 (Train : Val : Test = 70 : 15 : 15)
+  split:
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+    seed: 42                         # 固定随机种子，保证划分可复现（文档第7节要求）
+
+  split_dir: "split"                 # 划分索引保存目录，所有实验共享同一份划分
+
+# ---------- 输出 ----------
+output:
+  results_dir: "results"             # 指标/图表输出（论文用）
+  checkpoint_dir: "checkpoints"      # best 模型保存
+  log_dir: "logs"                    # 训练日志 / TensorBoard
+
+# ---------- 通用训练（未使用时由实验配置覆盖） ----------
+training:
+  epochs: 50                         # 文档第11节要求训练 50 轮
+  batch_size: 64
+  optimizer: "adam"
+  lr: 1e-3
+  weight_decay: 1e-4
+  lr_scheduler: "cosine"
+  early_stopping_patience: 10
+  seed: 42
