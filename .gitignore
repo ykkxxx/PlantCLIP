@@ -15,3 +15,5 @@ split/
 .DS_Store
 .idea/
 .vscode/
+
+/dataset/data/

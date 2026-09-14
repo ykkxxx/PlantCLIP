@@ -209,10 +209,15 @@ def run_statistics(data_root, save_path="results/data_distribution.png"):
     plt.figure(figsize=(max(10, len(class_names) * 0.6), 5))
     plt.bar(range(len(class_names)), ordered_counts)
     plt.xticks(range(len(class_names)), class_names, rotation=90, fontsize=7)
-    plt.ylabel("样本数量")
-    plt.title(f"PlantVillage 类别分布 (共 {len(class_names)} 类，{len(labels)} 张)")
+    plt.xlabel("Disease Classes")
+    plt.ylabel("Number of Images")
+
+    plt.title(
+    f"PlantVillage Dataset Class Distribution "
+    f"({len(class_names)} Classes, {len(labels)} Images)"
+    )
     plt.tight_layout()
-    plt.savefig(save_path, dpi=150)
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"[统计] 类别分布图已保存: {save_path}")
 

@@ -16,7 +16,7 @@ model:
   num_classes: 38
 
 data:
-  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"
+  root: "/root/PlantCLIP/dataset/data"
 
 # Zero-shot 不训练；此处仅保留批次/种子，供 test.py 使用
 training:

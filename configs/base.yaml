@@ -8,7 +8,7 @@
 
 # ---------- 数据 ----------
 data:
-  root: "~/autodl-tmp/PlantVillage-Dataset-master/raw/color"   # PlantVillage color 根目录 (标准 ImageFolder)
+  root: "/root/PlantCLIP/dataset/data"   # PlantVillage color 根目录 (标准 ImageFolder)
   image_size: 224                    # 统一输入分辨率 224x224 RGB（文档第8节要求）
   num_workers: 8                     # DataLoader 加载线程数
 
@@ -32,8 +32,8 @@ training:
   epochs: 50                         # 文档第11节要求训练 50 轮
   batch_size: 64
   optimizer: "adam"
-  lr: 1e-3
-  weight_decay: 1e-4
+  lr: 0.001
+  weight_decay: 0.0001
   lr_scheduler: "cosine"
   early_stopping_patience: 10
   seed: 42

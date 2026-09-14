@@ -1,7 +1,7 @@
 # ========== 基础依赖（AutoDL: Ubuntu 20.04 / Python 3.8 / CUDA 11.3）==========
 # AutoDL 镜像通常已预装 torch，若未安装请按官方镜像安装命令处理
-torch==1.10.0
-torchvision==0.11.0
+torch
+torchvision
 
 numpy
 pillow
