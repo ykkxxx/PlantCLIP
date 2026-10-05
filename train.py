@@ -49,6 +49,12 @@ def parse_args():
                              "实验名会自动加 _Nshot 后缀，结果存到独立目录")
     parser.add_argument("--patience", type=int, default=None,
                         help="覆盖配置中的 early_stopping_patience（少样本时建议放大）")
+    parser.add_argument("--n-ctx", type=int, default=None,
+                        help="覆盖配置中的 CoOp 上下文长度（只对 model.mode=coop 生效）。"
+                             "evaluate.py 会自动从 checkpoint 里读回该值，无需重复传")
+    parser.add_argument("--exp-suffix", type=str, default=None,
+                        help="实验名后缀（如 ctx4），用于同一配置下并行比较不同超参，"
+                             "避免互相覆盖 checkpoint。evaluate.py 需传相同的后缀")
     return parser.parse_args()
 
 
@@ -137,9 +143,18 @@ def main():
     if args.patience is not None:
         tcfg["early_stopping_patience"] = args.patience
 
+    # CoOp 的上下文长度：写进 cfg，会随 checkpoint 一起落盘，evaluate 时自动读回
+    if args.n_ctx is not None:
+        cfg["model"]["n_ctx"] = args.n_ctx
+
     # 少样本实验用独立的实验名，避免覆盖全量实验的 checkpoint / 结果 / 日志
     if args.shots:
         exp_name = f"{exp_name}_{args.shots}shot"
+        cfg["experiment"]["name"] = exp_name
+
+    # 同一配置下比较不同超参（如 CoOp 的 n_ctx）时用它区分，顺序与 evaluate.py 一致
+    if args.exp_suffix:
+        exp_name = f"{exp_name}_{args.exp_suffix}"
         cfg["experiment"]["name"] = exp_name
 
     results_dir, ckpt_dir, log_dir = resolve_output_dirs(cfg)
@@ -238,9 +253,12 @@ def main():
         scheduler = None
 
     patience = tcfg.get("early_stopping_patience", 10)
-    logger.info(f"模型: {cfg['model'].get('name')} | 优化器: {optimizer_name} | lr: {lr} "
-                f"| epochs: {epochs} | batch: {batch_size} | warmup: {warmup_epochs} "
-                f"| early_stop: {patience}")
+    mode_desc = cfg["model"].get("mode", "")
+    if mode_desc == "coop":
+        mode_desc = f"coop(n_ctx={cfg['model'].get('n_ctx')})"
+    logger.info(f"模型: {cfg['model'].get('name')} {mode_desc} | 优化器: {optimizer_name} "
+                f"| lr: {lr} | epochs: {epochs} | batch: {batch_size} "
+                f"| warmup: {warmup_epochs} | early_stop: {patience}")
 
     # ---------------- 可选 TensorBoard ----------------
     writer = None

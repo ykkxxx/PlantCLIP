@@ -42,6 +42,8 @@ def parse_args():
     parser.add_argument("--shots", type=int, default=None,
                         help="少样本实验：与 train.py 的 --shots 保持一致，"
                              "用于定位 checkpoints/<实验名>_Nshot/best_model.pth")
+    parser.add_argument("--exp-suffix", type=str, default=None,
+                        help="实验名后缀：与 train.py 的 --exp-suffix 保持一致")
     return parser.parse_args()
 
 
@@ -114,6 +116,9 @@ def main():
     if args.shots:
         exp_name = f"{exp_name}_{args.shots}shot"
         cfg["experiment"]["name"] = exp_name
+    if args.exp_suffix:
+        exp_name = f"{exp_name}_{args.exp_suffix}"
+        cfg["experiment"]["name"] = exp_name
 
     results_dir, ckpt_dir, log_dir = resolve_output_dirs(cfg)
     os.makedirs(results_dir, exist_ok=True)
@@ -141,8 +146,17 @@ def main():
                         num_workers=cfg["data"].get("num_workers", 8), pin_memory=True)
 
     # ---------------- 模型与权重 ----------------
-    model = build_model(cfg, num_classes, class_names).to(device)
     ckpt = torch.load(ckpt_path, map_location=device)
+    # 以 checkpoint 里落盘的模型配置为准重建模型：CoOp 的 n_ctx、Adapter 的
+    # 瓶颈宽度等若与训练时不一致，load_state_dict 会直接形状不匹配。
+    # 这样评估时不必重复传训练用过的命令行参数。
+    saved_model_cfg = ckpt.get("config", {}).get("model", {})
+    for key in ("mode", "clip_backbone", "n_ctx", "ctx_init",
+                "adapter_bottleneck", "adapter_alpha", "dropout"):
+        if key in saved_model_cfg:
+            cfg["model"][key] = saved_model_cfg[key]
+
+    model = build_model(cfg, num_classes, class_names).to(device)
     model.load_state_dict(ckpt["model_state_dict"])
     logger.info(f"已加载权重：epoch={ckpt.get('epoch')} val_acc={ckpt.get('val_acc')}")
 
