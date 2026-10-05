@@ -1,0 +1,40 @@
+# ============================================================
+# CLIP 线性探测（冻结图像编码器，只训练线性分类头）
+#
+# 作用：给 Adapter 和全量微调提供"最少可训练参数"的下界参照。
+#       三者共用同一个图像塔，唯一区别是解冻了哪些参数：
+#         clip_linear  : 只训分类头        （19,494 个参数 / 0.01%）
+#         clip_adapter : 训 Adapter + 头   （~1.2M    / 0.81%）
+#         clip_finetune: 全量微调          （~86.4M   / 57.7%）
+#
+# 全量数据下三者都在 99%+ 无差别，必须用少样本才有区分度：
+#   python train.py --config configs/clip_linear.yaml --shots 5
+#   python evaluate.py --config configs/clip_linear.yaml --shots 5
+# ============================================================
+
+experiment:
+  name: "clip_linear"
+
+model:
+  type: "clip"
+  name: "clip"
+  clip_backbone: "ViT-B-16"
+  pretrained: "openai"
+  mode: "linear"             # 冻结主干，只训线性头
+  dropout: 0.0
+  num_classes: 38
+
+data:
+  root: "/root/PlantCLIP/dataset/data"
+
+training:
+  epochs: 10
+  batch_size: 64
+  optimizer: "adamw"
+  lr: 0.001                  # 线性头是随机初始化的，用与 Adapter 同量级的 lr
+  weight_decay: 0.01
+  head_lr_mult: 1.0
+  warmup_epochs: 1
+  lr_scheduler: "cosine"
+  early_stopping_patience: 3
+  seed: 42

@@ -47,6 +47,8 @@ def parse_args():
     parser.add_argument("--shots", type=int, default=None,
                         help="少样本设定：训练集每类只用 N 张（默认用全部）。"
                              "实验名会自动加 _Nshot 后缀，结果存到独立目录")
+    parser.add_argument("--patience", type=int, default=None,
+                        help="覆盖配置中的 early_stopping_patience（少样本时建议放大）")
     return parser.parse_args()
 
 
@@ -132,6 +134,8 @@ def main():
         tcfg["epochs"] = args.epochs
     if args.batch_size is not None:
         tcfg["batch_size"] = args.batch_size
+    if args.patience is not None:
+        tcfg["early_stopping_patience"] = args.patience
 
     # 少样本实验用独立的实验名，避免覆盖全量实验的 checkpoint / 结果 / 日志
     if args.shots:
