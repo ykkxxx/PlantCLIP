@@ -1,0 +1,47 @@
+# ============================================================
+# Prompt Learning 改进方向：CoOp（Context Optimization）
+#
+# 与 Adapter 的对比关系（论文第 4.3 节的"改进方向"之一）：
+#   Adapter 改的是**图像侧** —— 在视觉塔每个 block 后插瓶颈残差分支；
+#   CoOp    改的是**文本侧** —— 双塔全部冻结，只学一组上下文向量，
+#           拼在类别名前面：  [SOT] + [ctx×16] + [类别名] + [EOT]
+#
+# 可训练参数只有 n_ctx × 512 = 8,192 个（占 CLIP 总量 0.005%），
+# 比 Adapter（1.2M / 0.81%）还少两个数量级，是本课题参数效率最高的一档。
+#
+# 关键：零样本已经能给出 0.2012，说明 CLIP 的文本侧本身有信号，
+# 但手工模板（"a photo of a diseased {} leaf"）并不适配 PlantVillage
+# 的类别命名方式。CoOp 让模型自己在少样本上把模板"调"出来。
+#
+# 用法（少样本设定下与本项目其余方法可直接对比）：
+#   python train.py --config configs/clip_coop.yaml --shots 5 --batch-size 16 --epochs 50 --patience 15
+#   python evaluate.py --config configs/clip_coop.yaml --shots 5
+# ============================================================
+
+experiment:
+  name: "clip_coop"
+
+model:
+  type: "clip"               # 数据侧走 CLIP 官方预处理（与图像塔配套）
+  name: "clip"
+  clip_backbone: "ViT-B-16"
+  pretrained: "openai"
+  mode: "coop"               # 学习文本侧上下文向量，双塔全冻
+  n_ctx: 16                  # 上下文向量个数（官方推荐 16）
+  ctx_init: "a photo of a"   # 用它初始化上下文；写成 null 则随机初始化
+  num_classes: 38
+
+data:
+  root: "/root/PlantCLIP/dataset/data"
+
+training:
+  epochs: 50
+  batch_size: 64
+  optimizer: "adamw"
+  lr: 0.002                  # 已关掉分类头，只有 8192 个参数要学，可用较大的 lr
+  weight_decay: 0.0          # ctx 是 prompt 而非权重，不加权重衰减
+  head_lr_mult: 1.0          # CoOp 没有分类头，此项无实际作用，保留只为配置一致
+  warmup_epochs: 1
+  lr_scheduler: "cosine"
+  early_stopping_patience: 10
+  seed: 42

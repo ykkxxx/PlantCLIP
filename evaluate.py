@@ -24,7 +24,8 @@ from torch.utils.data import DataLoader
 
 from dataset.dataset import create_datasets
 from models import build_model
-from utils.config import load_config, resolve_output_dirs, PROJECT_ROOT
+from utils.config import (PROJECT_ROOT, load_class_names, load_config,
+                          resolve_output_dirs)
 from utils.logger import setup_logger
 from utils.metrics import build_report
 from utils.seed import set_seed
@@ -104,13 +105,6 @@ def append_summary(path, row):
             writer.writerow({k: r.get(k, "") for k in fieldnames})
 
 
-def load_class_names(cfg):
-    """从 split/class_names.json 读取类别名（由 create_datasets 落盘，避免重复扫描数据集）。"""
-    path = os.path.join(cfg["data"]["split_dir"], "class_names.json")
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 def main():
     args = parse_args()
     cfg = load_config(args.config)
@@ -147,7 +141,7 @@ def main():
                         num_workers=cfg["data"].get("num_workers", 8), pin_memory=True)
 
     # ---------------- 模型与权重 ----------------
-    model = build_model(cfg, num_classes).to(device)
+    model = build_model(cfg, num_classes, class_names).to(device)
     ckpt = torch.load(ckpt_path, map_location=device)
     model.load_state_dict(ckpt["model_state_dict"])
     logger.info(f"已加载权重：epoch={ckpt.get('epoch')} val_acc={ckpt.get('val_acc')}")

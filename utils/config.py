@@ -5,6 +5,7 @@
 避免下游 create_datasets(cfg) 因缺少 model 节而 KeyError。
 """
 
+import json
 import os
 from pathlib import Path
 
@@ -65,6 +66,19 @@ def load_config(config_path, base_name="base.yaml"):
         cfg["data"]["split_dir"] = str(PROJECT_ROOT / split_dir)
 
     return cfg
+
+
+def load_class_names(cfg):
+    """从 split/class_names.json 读取类别名。
+
+    由 create_datasets 落盘，顺序与标签 0..C-1 一一对应。
+    需要文本侧类别名的模型（如 CoOp）和评估指标都要用。
+    """
+    split_dir = cfg["data"].get("split_dir", "split")
+    if not os.path.isabs(split_dir):
+        split_dir = str(PROJECT_ROOT / split_dir)
+    with open(os.path.join(split_dir, "class_names.json"), "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def resolve_output_dirs(cfg):

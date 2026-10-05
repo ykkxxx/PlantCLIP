@@ -28,7 +28,7 @@ from torch.utils.data import DataLoader, Subset
 
 from dataset.dataset import create_datasets
 from models import build_model
-from utils.config import load_config, resolve_output_dirs
+from utils.config import load_class_names, load_config, resolve_output_dirs
 from utils.logger import setup_logger
 from utils.seed import set_seed
 
@@ -177,7 +177,9 @@ def main():
                             num_workers=num_workers, pin_memory=True)
 
     # ---------------- 模型 ----------------
-    model = build_model(cfg, num_classes).to(device)
+    # 类别名给 CoOp 用来构造文本 prompt；其他模型用不到（传 None 也一样）
+    class_names = load_class_names(cfg)
+    model = build_model(cfg, num_classes, class_names).to(device)
     criterion = nn.CrossEntropyLoss()
 
     # 可训练参数量：CLIP 微调（全量）与 Adapter / Prompt Learning（少量）对比的核心指标
