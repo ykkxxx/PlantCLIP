@@ -19,9 +19,11 @@ data:
 training:
   epochs: 50
   batch_size: 64
-  optimizer: "adam"
-  lr: 0.0003                 # ViT 通常需要更小学习率
-  weight_decay: 0.0001
+  optimizer: "adamw"
+  lr: 0.00001                # 主干 lr：ViT 全量微调，比 ResNet50 小两个数量级
+  weight_decay: 0.05         # AdamW 的标准权重衰减
+  head_lr_mult: 10           # 分类头随机初始化，用 10 倍 lr（1e-4）单独成组
+  warmup_epochs: 5           # 前 5 轮线性预热，避免初期大梯度破坏预训练特征
   lr_scheduler: "cosine"
-  early_stopping_patience: 10
+  early_stopping_patience: 15  # 预热+小 lr 收敛较慢，放宽早停
   seed: 42

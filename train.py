@@ -14,6 +14,7 @@ loss 与 accuracy 记录、early stopping；训练结束后输出论文用曲线
 import argparse
 import csv
 import json
+import math
 import os
 import time
 
@@ -29,6 +30,9 @@ from models import build_model
 from utils.config import load_config, resolve_output_dirs
 from utils.logger import setup_logger
 from utils.seed import set_seed
+
+# 分类头的参数名前缀（resnet50 为 fc.*，vit_b_16 为 heads.*）
+HEAD_PREFIXES = ("fc.", "heads.")
 
 
 def parse_args():
@@ -142,21 +146,56 @@ def main():
     optimizer_name = str(tcfg.get("optimizer", "adam")).lower()
     lr = tcfg.get("lr", 1e-3)
     weight_decay = tcfg.get("weight_decay", 1e-4)
-    if optimizer_name == "sgd":
-        optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9,
-                                    weight_decay=weight_decay)
+    head_lr_mult = float(tcfg.get("head_lr_mult", 1.0))
+
+    # 分类头是随机初始化的，而主干是预训练权重：两者用同一个学习率时，
+    # 头学不动、主干先被破坏。head_lr_mult > 1 时把头单独分一组用更大的 lr。
+    # 默认 1.0，退化为单参数组（ResNet50 基线的行为完全不变）。
+    if head_lr_mult > 1.0:
+        head_params, backbone_params = [], []
+        for name, param in model.named_parameters():
+            (head_params if name.startswith(HEAD_PREFIXES) else backbone_params).append(param)
+        params = [
+            {"params": backbone_params, "lr": lr},
+            {"params": head_params, "lr": lr * head_lr_mult},
+        ]
+        logger.info(f"分类头单独分组: 主干 lr={lr:.2e} / 头 lr={lr * head_lr_mult:.2e} "
+                    f"（主干 {len(backbone_params)} 个张量，头 {len(head_params)} 个张量）")
     else:
-        optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+        params = model.parameters()
+
+    if optimizer_name == "sgd":
+        optimizer = torch.optim.SGD(params, lr=lr, momentum=0.9, weight_decay=weight_decay)
+    elif optimizer_name == "adamw":
+        optimizer = torch.optim.AdamW(params, lr=lr, weight_decay=weight_decay)
+    else:
+        optimizer = torch.optim.Adam(params, lr=lr, weight_decay=weight_decay)
 
     epochs = tcfg.get("epochs", 50)
-    if str(tcfg.get("lr_scheduler", "cosine")).lower() == "cosine":
+    warmup_epochs = int(tcfg.get("warmup_epochs", 0))
+    scheduler_name = str(tcfg.get("lr_scheduler", "cosine")).lower()
+
+    # warmup：前 warmup_epochs 轮 lr 从 1/warmup 线性爬到满值，之后按 scheduler 衰减。
+    # LambdaLR 对每个参数组按各自基准 lr 等比缩放，因此与上面的分组 lr 兼容。
+    if warmup_epochs > 0:
+        def lr_lambda(epoch):
+            if epoch < warmup_epochs:
+                return float(epoch + 1) / float(warmup_epochs)
+            if scheduler_name == "cosine":
+                progress = float(epoch - warmup_epochs) / float(max(1, epochs - warmup_epochs))
+                return 0.5 * (1.0 + math.cos(math.pi * progress))
+            return 1.0
+
+        scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+    elif scheduler_name == "cosine":
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(epochs, 1))
     else:
         scheduler = None
 
     patience = tcfg.get("early_stopping_patience", 10)
     logger.info(f"模型: {cfg['model'].get('name')} | 优化器: {optimizer_name} | lr: {lr} "
-                f"| epochs: {epochs} | batch: {batch_size} | early_stop: {patience}")
+                f"| epochs: {epochs} | batch: {batch_size} | warmup: {warmup_epochs} "
+                f"| early_stop: {patience}")
 
     # ---------------- 可选 TensorBoard ----------------
     writer = None
