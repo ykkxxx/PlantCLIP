@@ -1,34 +1,46 @@
 # ============================================================
-# Baseline D：CLIP Fine-tuning（OpenCLIP ViT-B/32）
-# 目的：验证领域数据微调后的效果（文档第 4.1 节）
-# 说明：微调图像分支；文本分支默认冻结（可通过
-#       finetune_text_encoder 开启）。文本侧用 prompt.template。
+# Baseline D：CLIP 微调（OpenCLIP ViT-B/16 图像编码器 + 线性分类头）
+# 目的：文档第 4.1 节的第 4 个基线，也是 Adapter / Prompt Learning /
+#       Attention 三个改进方向的对照起点。
+#
+# 相对原配置文件的改动：
+#   1. ViT-B/32 -> ViT-B/16：zero-shot 对比已验证 B/16 明显更好（0.2012 vs 0.1550）
+#   2. adam -> adamw + head_lr_mult + warmup：与 vit_b16 基线同一套稳定配方
+#   3. epochs 50 -> 10：该数据集上 3~5 轮即饱和，10 轮足够走完余弦周期
+#   4. 去掉 prompt 模板：本基线只用图像编码器，文本侧留给 Prompt Learning 改进
+#
+# 说明：model.type=clip 会让数据侧走 CLIP 官方预处理（BICUBIC + CLIP
+#       mean/std），必须与 open_clip 一致，否则精度会大幅虚低。
+#
+# 用法：
+#   python train.py --config configs/clip_finetune.yaml
+#   python evaluate.py --config configs/clip_finetune.yaml --split test
+#   # 只训线性头（冻结主干）的对照实验：把 model.mode 改成 "linear"
 # ============================================================
 
 experiment:
   name: "clip_finetune"
 
 model:
-  type: "clip"             # 使用 CLIP 预处理
-  clip_backbone: "ViT-B/32"
+  type: "clip"             # 决定预处理：CLIP 官方 transform
+  name: "clip"
+  clip_backbone: "ViT-B-16"  # 注意：open_clip 用连字符，不是 ViT-B/16
   pretrained: "openai"
-  zero_shot: false         # 需要微调训练
-  finetune_text_encoder: false   # true 表示同时微调文本编码器
+  mode: "finetune"         # linear=冻结主干只训线性头 / finetune=全量微调
+  dropout: 0.0
   num_classes: 38
 
 data:
   root: "/root/PlantCLIP/dataset/data"
 
 training:
-  epochs: 50
+  epochs: 10                 # CLIP 微调收敛快，10 轮足够走完一个完整余弦周期
   batch_size: 64
-  optimizer: "adam"
-  lr: 0.00001                 # 微调预训练大模型用小学习率
-  weight_decay: 0.0001
+  optimizer: "adamw"
+  lr: 0.00001                # 主干 lr：与 vit_b16 基线同量级
+  weight_decay: 0.01
+  head_lr_mult: 10           # 线性头随机初始化，用 10 倍 lr（1e-4）单独成组
+  warmup_epochs: 1           # 1 轮线性预热
   lr_scheduler: "cosine"
-  early_stopping_patience: 10
+  early_stopping_patience: 3
   seed: 42
-
-# 文本 Prompt 模板
-prompt:
-  template: "a photo of a diseased {} leaf"

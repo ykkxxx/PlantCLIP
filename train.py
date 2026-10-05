@@ -31,8 +31,8 @@ from utils.config import load_config, resolve_output_dirs
 from utils.logger import setup_logger
 from utils.seed import set_seed
 
-# 分类头的参数名前缀（resnet50 为 fc.*，vit_b_16 为 heads.*）
-HEAD_PREFIXES = ("fc.", "heads.")
+# 分类头的参数名前缀（resnet50 为 fc.*，vit_b_16 为 heads.*，CLIP 为 head.*）
+HEAD_PREFIXES = ("fc.", "heads.", "head.")
 
 
 def parse_args():
@@ -142,6 +142,12 @@ def main():
     # ---------------- 模型 ----------------
     model = build_model(cfg, num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
+
+    # 可训练参数量：CLIP 微调（全量）与 Adapter / Prompt Learning（少量）对比的核心指标
+    n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    n_total = sum(p.numel() for p in model.parameters())
+    logger.info(f"可训练参数: {n_trainable:,} / {n_total:,} "
+                f"（{100.0 * n_trainable / max(n_total, 1):.2f}%）")
 
     optimizer_name = str(tcfg.get("optimizer", "adam")).lower()
     lr = tcfg.get("lr", 1e-3)

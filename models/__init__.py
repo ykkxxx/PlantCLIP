@@ -1,12 +1,16 @@
 """模型构建入口。
 
-当前仅支持第一阶段的两个 CNN 基线；CLIP 相关封装（clip_model.py /
-adapter.py）将在第二阶段加入。
+- CNN 基线：ResNet50 / ViT-B/16（torchvision + ImageNet 预训练）
+- CLIP 微调基线：CLIPClassifier（open_clip + 线性分类头）
+
+两个分支产出的都是普通 nn.Module（forward(images) -> logits），
+train.py / evaluate.py 共用同一套训练与评估流程。
 """
 
+from models.clip_classifier import CLIPClassifier
 from models.cnn import build_resnet50, build_vit_b16
 
-# model.name -> 构建函数
+# model.name -> 构建函数（仅 CNN 基线；CLIP 走 build_model 里的独立分支）
 _BUILDERS = {
     "resnet50": build_resnet50,
     "vit_b_16": build_vit_b16,
@@ -18,7 +22,7 @@ def build_model(cfg, num_classes):
     """按配置构建模型。
 
     Args:
-        cfg: 配置 dict，需含 model.name / model.type / model.pretrained
+        cfg: 配置 dict，需含 model.type / model.name
         num_classes: 类别数（由数据集推断后传入，而非信任配置里的硬编码值）
 
     Returns:
@@ -28,10 +32,15 @@ def build_model(cfg, num_classes):
     model_type = model_cfg.get("type", "cnn")
     name = model_cfg.get("name", "resnet50")
 
+    # CLIP 分支：model.type=clip 同时决定数据侧改用 CLIP 官方预处理
+    # （见 dataset/preprocess.py::build_transform），两者必须一致。
     if model_type == "clip":
-        raise NotImplementedError(
-            "CLIP 模型将在第二阶段实现（models/clip_model.py）。"
-            "当前 train.py 只支持 CNN 基线：resnet50 / vit_b_16。"
+        return CLIPClassifier(
+            num_classes=num_classes,
+            backbone=model_cfg.get("clip_backbone", "ViT-B-16"),
+            pretrained=model_cfg.get("pretrained", "openai"),
+            mode=model_cfg.get("mode", "finetune"),
+            dropout=float(model_cfg.get("dropout", 0.0)),
         )
 
     if name not in _BUILDERS:
@@ -41,4 +50,4 @@ def build_model(cfg, num_classes):
     return _BUILDERS[name](num_classes=num_classes, pretrained=pretrained)
 
 
-__all__ = ["build_model", "build_resnet50", "build_vit_b16"]
+__all__ = ["build_model", "build_resnet50", "build_vit_b16", "CLIPClassifier"]

@@ -18,8 +18,15 @@ def normalize_backbone_name(name):
     return str(name).strip().replace("/", "-")
 
 
-def load_clip(backbone="ViT-B-32", pretrained="openai", device="cuda"):
-    """加载 CLIP 模型与 tokenizer，冻结全部参数并切到 eval 模式。
+def load_clip(backbone="ViT-B-32", pretrained="openai", device="cuda", freeze=True):
+    """加载 CLIP 模型与 tokenizer，切到 eval 模式。
+
+    Args:
+        backbone: open_clip 主干名（连字符写法，如 "ViT-B-16"）
+        pretrained: 预训练权重来源（"openai"）
+        device: 加载到哪个设备
+        freeze: True（默认）= 冻结全部参数，用于 zero-shot 推理；
+                False = 保留梯度，由调用方（微调/Adapter）决定冻结哪些层
 
     Returns:
         (model, tokenizer)
@@ -49,8 +56,9 @@ def load_clip(backbone="ViT-B-32", pretrained="openai", device="cuda"):
     tokenizer = open_clip.get_tokenizer(backbone)
 
     model = model.to(device).eval()
-    for param in model.parameters():
-        param.requires_grad_(False)
+    if freeze:
+        for param in model.parameters():
+            param.requires_grad_(False)
     return model, tokenizer
 
 
