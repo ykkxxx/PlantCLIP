@@ -30,9 +30,15 @@ def main():
     model = build_model(cfg, NUM_CLASSES)
     n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
     n_total = sum(p.numel() for p in model.parameters())
+    n_visual = sum(p.numel() for p in model.clip.visual.parameters() if p.requires_grad)
+    n_text = sum(p.numel() for p in model.clip.text.parameters() if p.requires_grad)
     print(f"    mode={model.mode} | backbone={model.backbone_name}")
     print(f"    分类头: {model.head[1]}")
     print(f"    可训练参数: {n_train:,} / {n_total:,} （{100.0 * n_train / n_total:.2f}%）")
+    print(f"      图像编码器 {n_visual:,} | 文本编码器 {n_text:,} | 分类头 "
+          f"{n_train - n_visual - n_text:,}")
+    # 文本编码器不参与前向，必须全冻，否则"可训练参数量"这个对比指标失真
+    assert n_text == 0, "文本编码器应被冻结（本基线不使用文本侧）！"
 
     print("[2] 前向传播")
     model.eval()
@@ -52,9 +58,12 @@ def main():
     transform = build_transform(cfg["model"]["type"], "test", 224)
     print(f"    model.type={cfg['model']['type']} -> {transform}")
     normalize = [t for t in transform.transforms if t.__class__.__name__ == "Normalize"][0]
-    mean = tuple(round(float(v), 6) for v in normalize.mean)
+    mean = [float(v) for v in normalize.mean]
     print(f"    归一化均值: {mean}")
-    assert mean == CLIP_MEAN, "预处理用的不是 CLIP 官方均值，精度会大幅虚低！"
+    # 逐项按容差比较（不要取整后再判等，0.481455 != 0.48145466）
+    assert len(mean) == len(CLIP_MEAN) and all(
+        abs(a - b) < 1e-5 for a, b in zip(mean, CLIP_MEAN)
+    ), "预处理用的不是 CLIP 官方均值，精度会大幅虚低！"
 
     print("=" * 60)
     print("全部检查通过 ✅  下一步：")

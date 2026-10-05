@@ -54,8 +54,15 @@ class CLIPClassifier(nn.Module):
             nn.Linear(feat_dim, num_classes),
         )
 
+        # 文本编码器本基线不使用：它不参与前向、不产生梯度，但会混进
+        # "可训练参数量"里污染与 Adapter / Prompt Learning 的对比，所以始终冻结。
+        if getattr(clip, "text", None) is not None:
+            for param in clip.text.parameters():
+                param.requires_grad_(False)
+
+        # linear 模式：图像编码器也冻结，只训线性头
         if mode == "linear":
-            for param in self.clip.parameters():
+            for param in clip.visual.parameters():
                 param.requires_grad_(False)
 
     def train(self, mode=True):
