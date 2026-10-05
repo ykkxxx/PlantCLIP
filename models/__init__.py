@@ -41,6 +41,8 @@ def build_model(cfg, num_classes):
             pretrained=model_cfg.get("pretrained", "openai"),
             mode=model_cfg.get("mode", "finetune"),
             dropout=float(model_cfg.get("dropout", 0.0)),
+            bottleneck=int(model_cfg.get("adapter_bottleneck", 64)),
+            alpha=float(model_cfg.get("adapter_alpha", 0.2)),
         )
 
     if name not in _BUILDERS:

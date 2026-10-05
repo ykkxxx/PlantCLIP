@@ -1,0 +1,44 @@
+# ============================================================
+# 改进方向一：CLIP + Adapter（文档第 4.2 节）
+# 对照：configs/clip_finetune.yaml（Baseline D）
+#
+# 做法：主干完全冻结，在图像塔每层插一个瓶颈残差 Adapter
+#       x' = x + alpha * W_up(GELU(W_down(x)))
+#       W_up 零初始化 → 初始是恒等映射，训练从预训练模型原样开始。
+#       只训 Adapter + 线性分类头，可训练参数约 120 万（0.8%）。
+#
+# 全量数据下本数据集已饱和（基线 0.9984，只剩 0.16 个点），
+# 因此这个实验重点看**少样本**：每类 1 / 5 / 10 张。
+#   python train.py --config configs/clip_adapter.yaml --shots 5
+#   python evaluate.py --config configs/clip_adapter.yaml --shots 5
+# 实验名会自动变成 clip_adapter_5shot，结果存到独立目录，不覆盖全量实验。
+# ============================================================
+
+experiment:
+  name: "clip_adapter"
+
+model:
+  type: "clip"
+  name: "clip"
+  clip_backbone: "ViT-B-16"
+  pretrained: "openai"
+  mode: "adapter"            # linear / finetune / adapter
+  adapter_bottleneck: 64     # 瓶颈维度，越小参数越少
+  adapter_alpha: 0.2         # 残差缩放系数
+  dropout: 0.0
+  num_classes: 38
+
+data:
+  root: "/root/PlantCLIP/dataset/data"
+
+training:
+  epochs: 10
+  batch_size: 64
+  optimizer: "adamw"
+  lr: 0.001                  # Adapter 是随机初始化的新模块，用比微调大两个数量级的 lr
+  weight_decay: 0.01
+  head_lr_mult: 1.0          # Adapter 与分类头同量级，不需要分组成不同 lr
+  warmup_epochs: 1
+  lr_scheduler: "cosine"
+  early_stopping_patience: 3
+  seed: 42

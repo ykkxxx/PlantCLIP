@@ -16,6 +16,7 @@ import csv
 import json
 import math
 import os
+import random
 import time
 
 import matplotlib
@@ -23,7 +24,7 @@ matplotlib.use("Agg")  # 无显示环境下保存图片
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 from dataset.dataset import create_datasets
 from models import build_model
@@ -43,7 +44,29 @@ def parse_args():
                         help="覆盖配置中的训练轮数（调试用）")
     parser.add_argument("--batch-size", type=int, default=None,
                         help="覆盖配置中的 batch size（调试用）")
+    parser.add_argument("--shots", type=int, default=None,
+                        help="少样本设定：训练集每类只用 N 张（默认用全部）。"
+                             "实验名会自动加 _Nshot 后缀，结果存到独立目录")
     return parser.parse_args()
+
+
+def take_few_shot(dataset, shots, seed=42):
+    """从训练集里每类随机抽 shots 张，构造少样本训练子集。
+
+    分层抽样 + 固定 seed，保证可复现。返回的是原 dataset 的 Subset，
+    因此 transform（含训练增强）保持不变；验证/测试集不受影响，仍用全部数据。
+    """
+    rng = random.Random(seed)
+    by_class = {}
+    for i, label in enumerate(dataset.labels):
+        by_class.setdefault(label, []).append(i)
+
+    keep = []
+    for label in sorted(by_class):
+        indices = by_class[label]
+        rng.shuffle(indices)
+        keep += indices[:shots]
+    return Subset(dataset, sorted(keep))
 
 
 def train_one_epoch(model, loader, criterion, optimizer, device):
@@ -110,6 +133,11 @@ def main():
     if args.batch_size is not None:
         tcfg["batch_size"] = args.batch_size
 
+    # 少样本实验用独立的实验名，避免覆盖全量实验的 checkpoint / 结果 / 日志
+    if args.shots:
+        exp_name = f"{exp_name}_{args.shots}shot"
+        cfg["experiment"]["name"] = exp_name
+
     results_dir, ckpt_dir, log_dir = resolve_output_dirs(cfg)
     os.makedirs(results_dir, exist_ok=True)
     os.makedirs(ckpt_dir, exist_ok=True)
@@ -131,6 +159,11 @@ def main():
     # 类别数由数据本身推断，不信任配置里的硬编码 38
     num_classes = max(datasets["train"].labels) + 1
     logger.info(f"类别数（由数据推断）: {num_classes}")
+
+    if args.shots:
+        datasets["train"] = take_few_shot(datasets["train"], args.shots, tcfg.get("seed", 42))
+        logger.info(f"少样本设定：训练集每类 {args.shots} 张，共 {len(datasets['train'])} 张"
+                    f"（验证/测试集仍为全量）")
 
     batch_size = tcfg.get("batch_size", 64)
     num_workers = cfg["data"].get("num_workers", 8)

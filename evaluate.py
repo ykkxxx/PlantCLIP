@@ -38,6 +38,9 @@ def parse_args():
                         help="checkpoint 路径，默认 checkpoints/<exp>/best_model.pth")
     parser.add_argument("--split", type=str, default="test", choices=["val", "test"],
                         help="评估哪个划分，默认 test")
+    parser.add_argument("--shots", type=int, default=None,
+                        help="少样本实验：与 train.py 的 --shots 保持一致，"
+                             "用于定位 checkpoints/<实验名>_Nshot/best_model.pth")
     return parser.parse_args()
 
 
@@ -113,6 +116,11 @@ def main():
     cfg = load_config(args.config)
 
     exp_name = cfg["experiment"]["name"]
+    # 与 train.py 保持一致：少样本实验读同名后缀的 checkpoint 与结果目录
+    if args.shots:
+        exp_name = f"{exp_name}_{args.shots}shot"
+        cfg["experiment"]["name"] = exp_name
+
     results_dir, ckpt_dir, log_dir = resolve_output_dirs(cfg)
     os.makedirs(results_dir, exist_ok=True)
 
