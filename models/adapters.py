@@ -13,6 +13,28 @@ W_up 零初始化，因此刚插入时 Adapter 输出恒为 0、整体是恒等�
 import torch.nn as nn
 
 
+def get_visual_blocks(visual):
+    """取图像塔里 Transformer block 的序列（nn.Sequential，可按下标替换）。
+
+    open_clip 各版本结构不同，两条路径都要覆盖：
+    - visual.blocks                 （部分版本 / 变体）
+    - visual.transformer.resblocks  （经典结构）
+    """
+    blocks = getattr(visual, "blocks", None)
+    if blocks is not None:
+        return blocks
+
+    transformer = getattr(visual, "transformer", None)
+    if transformer is not None:
+        blocks = getattr(transformer, "resblocks", None)
+    if blocks is None:
+        available = [name for name, _ in visual.named_children()]
+        raise AttributeError(
+            f"无法定位图像塔的 Transformer blocks，可用的子模块：{available}"
+        )
+    return blocks
+
+
 class Adapter(nn.Module):
     """瓶颈残差 Adapter。
 
@@ -50,8 +72,10 @@ class AdapterBlock(nn.Module):
         self.block = block
         self.adapter = Adapter(dim, bottleneck, alpha)
 
-    def forward(self, x):
-        out = self.block(x)
+    def forward(self, x, *args, **kwargs):
+        # 透传 *args/**kwargs：经典结构的 Transformer.forward 会调
+        # block(x, attn_mask=...)，签名必须能吃下这个参数
+        out = self.block(x, *args, **kwargs)
         if isinstance(out, tuple):  # 兼容个别返回 tuple 的 open_clip 版本
             out = out[0]
         return self.adapter(out)

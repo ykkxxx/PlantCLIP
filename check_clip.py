@@ -19,7 +19,7 @@ import torch
 
 from dataset.preprocess import CLIP_MEAN, build_transform
 from models import build_model
-from models.adapters import Adapter
+from models.adapters import Adapter, get_visual_blocks
 from utils.config import load_config
 
 NUM_CLASSES = 38
@@ -55,7 +55,7 @@ def main():
 
     if model.mode == "adapter":
         adapters = [m for m in model.modules() if isinstance(m, Adapter)]
-        depth = len(model.clip.visual.blocks)
+        depth = len(get_visual_blocks(model.clip.visual))
         print(f"    Adapter: 插入 {len(adapters)} 个（主干深度 {depth}）")
         assert len(adapters) == depth, f"Adapter 数量应为 {depth}，实际 {len(adapters)}！"
         assert n_visual > 0, "Adapter 参数没有被解冻！"

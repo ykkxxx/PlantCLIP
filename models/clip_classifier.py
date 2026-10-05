@@ -16,7 +16,7 @@
 
 import torch.nn as nn
 
-from models.adapters import Adapter, AdapterBlock
+from models.adapters import Adapter, AdapterBlock, get_visual_blocks
 from models.clip_model import load_clip
 
 MODES = ("linear", "finetune", "adapter")
@@ -85,12 +85,8 @@ class CLIPClassifier(nn.Module):
         否则包装后的参数名对不上。
         """
         visual = self.clip.visual
-        blocks = getattr(visual, "blocks", None)
-        if blocks is None:
-            raise AttributeError(
-                "当前 open_clip 版本的 visual 没有 .blocks，Adapter 无法插入；"
-                f"可用的子模块：{[n for n, _ in visual.named_children()]}"
-            )
+        # 兼容 visual.blocks 与 visual.transformer.resblocks 两种结构
+        blocks = get_visual_blocks(visual)
 
         # token 维度：优先用 patch embedding 的输出通道（最稳定），退回 width
         if hasattr(visual, "conv1"):
