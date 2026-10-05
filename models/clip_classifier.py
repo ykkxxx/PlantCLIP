@@ -54,16 +54,18 @@ class CLIPClassifier(nn.Module):
             nn.Linear(feat_dim, num_classes),
         )
 
-        # 文本编码器本基线不使用：它不参与前向、不产生梯度，但会混进
-        # "可训练参数量"里污染与 Adapter / Prompt Learning 的对比，所以始终冻结。
-        if getattr(clip, "text", None) is not None:
-            for param in clip.text.parameters():
-                param.requires_grad_(False)
-
-        # linear 模式：图像编码器也冻结，只训线性头
-        if mode == "linear":
-            for param in clip.visual.parameters():
-                param.requires_grad_(False)
+        # 冻结策略：先全部冻结，再按模式解冻。
+        # 这里刻意不按属性名去找文本塔（open_clip 各版本对它的命名不一致），
+        # 只主动解冻 visual 与 head，其余（文本编码器、logit_scale 等）一律冻结。
+        # 文本塔在本基线不参与前向，若不解冻它，"可训练参数量"会凭空多出 63M，
+        # 污染与 Adapter / Prompt Learning 的对比。
+        for param in self.parameters():
+            param.requires_grad_(False)
+        for param in self.head.parameters():
+            param.requires_grad_(True)
+        if mode == "finetune":
+            for param in self.clip.visual.parameters():
+                param.requires_grad_(True)
 
     def train(self, mode=True):
         """切换训练/评估模式。

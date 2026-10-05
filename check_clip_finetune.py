@@ -31,14 +31,14 @@ def main():
     n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
     n_total = sum(p.numel() for p in model.parameters())
     n_visual = sum(p.numel() for p in model.clip.visual.parameters() if p.requires_grad)
-    n_text = sum(p.numel() for p in model.clip.text.parameters() if p.requires_grad)
+    n_head = sum(p.numel() for p in model.head.parameters() if p.requires_grad)
+    n_other = n_train - n_visual - n_head
     print(f"    mode={model.mode} | backbone={model.backbone_name}")
     print(f"    分类头: {model.head[1]}")
     print(f"    可训练参数: {n_train:,} / {n_total:,} （{100.0 * n_train / n_total:.2f}%）")
-    print(f"      图像编码器 {n_visual:,} | 文本编码器 {n_text:,} | 分类头 "
-          f"{n_train - n_visual - n_text:,}")
-    # 文本编码器不参与前向，必须全冻，否则"可训练参数量"这个对比指标失真
-    assert n_text == 0, "文本编码器应被冻结（本基线不使用文本侧）！"
+    print(f"      图像编码器 {n_visual:,} | 分类头 {n_head:,} | 其他 {n_other:,}")
+    # 不按属性名引用文本塔（版本间命名不一致），用"图像塔+分类头之外的都应冻结"来验证
+    assert n_other == 0, f"图像编码器与分类头之外还有 {n_other:,} 个可训练参数（文本塔应冻结）！"
 
     print("[2] 前向传播")
     model.eval()
