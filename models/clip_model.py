@@ -33,13 +33,37 @@ def load_clip(backbone="ViT-B-32", pretrained="openai", device="cuda"):
         ) from exc
 
     backbone = normalize_backbone_name(backbone)
-    model, _, _ = open_clip.create_model_and_transforms(backbone, pretrained=pretrained)
+
+    # 关键：OpenAI 的 CLIP 权重用 QuickGELU 激活训练，而 open_clip 里 ViT-B-32 的
+    # 默认配置是普通 GELU。不强制对齐的话，文本编码器每层激活都跟权重不匹配，
+    # 文本特征严重失真，zero-shot 准确率会掉到 15% 左右且预测集中在少数类。
+    # 若加载时看到 "QuickGELU mismatch" 警告，就是这个问题。
+    try:
+        model, _, _ = open_clip.create_model_and_transforms(
+            backbone, pretrained=pretrained, force_quick_gelu=True
+        )
+    except TypeError:
+        # 老版本 open_clip 没有该参数
+        model, _, _ = open_clip.create_model_and_transforms(backbone, pretrained=pretrained)
+
     tokenizer = open_clip.get_tokenizer(backbone)
 
     model = model.to(device).eval()
     for param in model.parameters():
         param.requires_grad_(False)
     return model, tokenizer
+
+
+def text_feature_similarity(text_feats):
+    """类别文本特征的平均两两余弦相似度（诊断用）。
+
+    38 个语义不同的类别，正常应明显小于 1（大致 0.5~0.8）。
+    若接近 1，说明文本特征塌缩、彼此难以区分，zero-shot 必然失效。
+    """
+    sim = text_feats @ text_feats.t()
+    n = sim.shape[0]
+    off_diag = sim[~torch.eye(n, dtype=torch.bool, device=sim.device)]
+    return float(off_diag.mean())
 
 
 @torch.no_grad()

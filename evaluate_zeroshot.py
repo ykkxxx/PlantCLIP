@@ -25,7 +25,8 @@ from torch.utils.data import DataLoader, Subset
 
 from dataset.dataset import create_datasets
 from evaluate import append_summary, load_class_names, plot_confusion_matrix
-from models.clip_model import encode_images, encode_texts, get_logit_scale, load_clip
+from models.clip_model import (encode_images, encode_texts, get_logit_scale,
+                               load_clip, text_feature_similarity)
 from utils.config import PROJECT_ROOT, load_config, resolve_output_dirs
 from utils.logger import setup_logger
 from utils.metrics import build_report
@@ -95,6 +96,13 @@ def main():
 
     text_feats = encode_texts(model, tokenizer, prompts_per_class, device)
 
+    # 自检：正常应明显小于 1；接近 1 说明文本特征塌缩，zero-shot 必然失效
+    text_sim = text_feature_similarity(text_feats)
+    logger.info(f"类别文本特征平均两两相似度: {text_sim:.4f}（正常应远小于 1）")
+    if text_sim > 0.95:
+        logger.warning("⚠ 文本特征高度相似，疑似塌缩 —— 检查上方是否出现 "
+                       "'QuickGELU mismatch' 警告")
+
     # ---------------- 图像侧 + 相似度分类 ----------------
     image_feats, labels = encode_images(model, loader, device)
     logit_scale = get_logit_scale(model)
@@ -102,6 +110,10 @@ def main():
 
     preds = logits.argmax(dim=1).cpu().numpy()
     labels = labels.cpu().numpy()
+
+    n_pred_classes = len(set(preds.tolist()))
+    logger.info(f"预测覆盖类别数: {n_pred_classes}/{len(class_names)}"
+                f"（远小于类别总数说明模型退化地只预测少数几类）")
 
     # ---------------- 指标与输出 ----------------
     report_text, metrics, cm = build_report(class_names, preds, labels)
