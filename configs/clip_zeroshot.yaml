@@ -10,7 +10,7 @@ experiment:
 
 model:
   type: "clip"             # 使用 CLIP 预处理
-  clip_backbone: "ViT-B/32"
+  clip_backbone: "ViT-B-32"  # 注意：open_clip 用连字符，不是 ViT-B/32
   pretrained: "openai"     # open_clip 预训练权重来源
   zero_shot: true          # 冻结权重，仅推理
   num_classes: 38
@@ -24,11 +24,18 @@ training:
   batch_size: 64
   seed: 42
 
-# 文本 Prompt 模板（文档第 9 节）。{} 会被替换为具体病害类别。
+# 文本 Prompt 模板（文档第 9 节）。
+# 命名占位符 {plant} / {disease} 由 utils/prompts.py 从类别目录名解析而来，
+# 例如 "Corn_(maize)___Northern_Leaf_Blight" -> plant="corn", disease="northern leaf blight"。
+# 也兼容文档里的单占位符写法（"a photo of a diseased {} leaf"）。
+#
+# 注意：healthy 类必须走 healthy_templates。若统一用 "diseased {}"，
+# 健康类会被描述成患病，语义反了，zero-shot 会大面积误判。
 prompt:
-  template: "a photo of a diseased {} leaf"
-  # 备用模板（后续 Prompt 实验时使用）
-  templates:
-    - "a photo of a diseased {} leaf"
-    - "a close-up image of {} disease on plant leaf"
-    - "a plant leaf infected with {}"
+  disease_templates:
+    - "a photo of a {plant} leaf with {disease}"
+    - "a close-up photo of {disease} on a {plant} leaf"
+    - "a {plant} leaf infected with {disease}"
+  healthy_templates:
+    - "a photo of a healthy {plant} leaf"
+    - "a close-up photo of a healthy {plant} leaf"
