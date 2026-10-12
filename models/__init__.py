@@ -3,11 +3,13 @@
 - CNN 基线：ResNet50 / ViT-B/16（torchvision + ImageNet 预训练）
 - CLIP 微调 / 线性探测 / Adapter：CLIPClassifier（open_clip + 线性分类头）
 - Prompt Learning：CoOpClassifier（冻住双塔，只学文本侧上下文向量）
+- Attention：AttnClassifier（冻住主干，用可学习 query 对 patch 做注意力池化）
 
-三种产出的都是普通 nn.Module（forward(images) -> logits），
+四种产出的都是普通 nn.Module（forward(images) -> logits），
 train.py / evaluate.py 共用同一套训练与评估流程。
 """
 
+from models.attention import AttnClassifier
 from models.clip_classifier import CLIPClassifier
 from models.cnn import build_resnet50, build_vit_b16
 from models.coop import CoOpClassifier
@@ -55,6 +57,14 @@ def build_model(cfg, num_classes, class_names=None):
                 ctx_init=model_cfg.get("ctx_init", "a photo of a"),
             )
 
+        if mode == "attn":
+            return AttnClassifier(
+                num_classes=num_classes,
+                backbone=model_cfg.get("clip_backbone", "ViT-B-16"),
+                pretrained=model_cfg.get("pretrained", "openai"),
+                dropout=float(model_cfg.get("dropout", 0.0)),
+            )
+
         return CLIPClassifier(
             num_classes=num_classes,
             backbone=model_cfg.get("clip_backbone", "ViT-B-16"),
@@ -73,4 +83,4 @@ def build_model(cfg, num_classes, class_names=None):
 
 
 __all__ = ["build_model", "build_resnet50", "build_vit_b16",
-           "CLIPClassifier", "CoOpClassifier"]
+           "CLIPClassifier", "CoOpClassifier", "AttnClassifier"]

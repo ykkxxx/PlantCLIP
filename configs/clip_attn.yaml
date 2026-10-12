@@ -1,0 +1,46 @@
+# ============================================================
+# Attention 改进方向：注意力池化分类头（文档第 4.4 节）
+#
+# 与另外两条改进方向的分工：
+#   Adapter 改**主干内部**（每个 block 后插瓶颈残差分支），
+#   CoOp    改**文本侧**（学上下文向量），
+#   Attention 改**主干之上的池化方式**：
+#       CLIP 的 ViT 默认取 CLS token，那是全局聚合；PlantVillage 是单叶
+#       图像、病斑只占一小块区域，CLS 会把病斑信号摊平。这里改成用一个
+#       可学习 query 对全部 196 个 patch token 做注意力池化。
+#
+# 可训练参数约 0.81M（0.54%），介于线性探测（0.013%）与 Adapter（0.81%）
+# 之间 —— 参数效率表上位置自然。
+#
+# 用法（5-shot，与其余改进方向同口径对比）：
+#   python check_clip.py --config configs/clip_attn.yaml
+#   python train.py --config configs/clip_attn.yaml --shots 5 --batch-size 16 --epochs 50 --patience 15
+#   python evaluate.py --config configs/clip_attn.yaml --shots 5
+# ============================================================
+
+experiment:
+  name: "clip_attn"
+
+model:
+  type: "clip"               # 数据侧走 CLIP 官方预处理
+  name: "clip"
+  clip_backbone: "ViT-B-16"
+  pretrained: "openai"
+  mode: "attn"               # 冻主干，只训注意力池化 + 线性头
+  dropout: 0.0
+  num_classes: 38
+
+data:
+  root: "/root/PlantCLIP/dataset/data"
+
+training:
+  epochs: 50
+  batch_size: 64
+  optimizer: "adamw"
+  lr: 0.001                  # 与 linear / adapter 同量级：池化层与头都是随机初始化
+  weight_decay: 0.01
+  head_lr_mult: 1.0          # 池化层与头都要训，不拆 lr
+  warmup_epochs: 1
+  lr_scheduler: "cosine"
+  early_stopping_patience: 10
+  seed: 42

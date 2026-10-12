@@ -4,13 +4,15 @@
     1. open_clip 能加载主干与 openai 权重
     2. 各模式的冻结策略正确（该冻结的必须全冻、该解冻的必须解开）
     3. forward 输出形状正确
-    4. linear / adapter / coop 模式下主干始终留在 eval 状态
-    5. model.type=clip 时数据侧走的是 CLIP 官方预处理（均值必须一致）
+    4. linear / adapter / coop / attn 模式下主干始终留在 eval 状态
+    5. attn 模式下 hook 抓到的是完整的 token 序列（196 patch + 1 CLS）
+    6. model.type=clip 时数据侧走的是 CLIP 官方预处理（均值必须一致）
 
 用法：
     python check_clip.py                                     # 默认查微调配置
     python check_clip.py --config configs/clip_adapter.yaml  # 查 Adapter 配置
     python check_clip.py --config configs/clip_coop.yaml     # 查 CoOp 配置
+    python check_clip.py --config configs/clip_attn.yaml     # 查 Attention 配置
 """
 
 import argparse
@@ -82,6 +84,30 @@ def check_freeze_policy(model):
         print(f"    CoOp: n_ctx={model.n_ctx} | ctx 形状 {tuple(model.ctx.shape)} "
               f"| 图像塔深度 {len(get_visual_blocks(model.clip.visual))}（全冻）")
 
+    elif model.mode == "attn":
+        assert set(buckets) <= {"pool", "head"}, \
+            f"attn 只应训练 pool + head，实际 {sorted(buckets)}"
+        assert not clip_trainable, \
+            f"attn 下主干必须全冻，但 {clip_trainable[:3]} 可训练"
+        assert "pool" in buckets, "注意力池化层没有被解冻！"
+        dim = model.pool.dim
+        print(f"    注意力池化: query + W_q/W_k/W_v（{dim} 维，单头）"
+              f"| 图像塔 token 数 {model.num_tokens}（含 CLS，全冻）")
+
+        # 我们的前向是「ln_post(token_dim) -> @ proj」，必须确认 ln_post 真的是
+        # 对 token 维度做归一化的 LayerNorm。若它是 Identity、或归一化的是
+        # 投影后的 512 维，patch 特征就会失真 —— 而且**不会报错**，只会悄悄掉
+        # 精度，所以这里显式拦住。看到这条断言失败请把整段输出发给我。
+        ln_post = getattr(model.clip.visual, "ln_post", None)
+        norm_shape = getattr(ln_post, "normalized_shape", None)
+        print(f"    ln_post: {type(ln_post).__name__} normalized_shape={norm_shape}"
+              f"（应等于 token 维度 {model.token_dim}）")
+        assert norm_shape is not None and int(norm_shape[0]) == model.token_dim, (
+            f"ln_post 应是 normalized_shape={model.token_dim} 的 LayerNorm，"
+            f"实际 {type(ln_post).__name__} / {norm_shape} —— 图像塔的收尾方式"
+            f"与预期不符，patch 投影路径需要按该版本调整"
+        )
+
     return n_train, n_total, buckets
 
 
@@ -129,11 +155,24 @@ def main():
               f"前 3 类的 EOT 位置 {model.eot_index[:3].tolist()}"
               f"（= n_ctx({model.n_ctx}) + 类别名长度 + 1）")
 
+    if model.mode == "attn":
+        # 池化层在 forward 里存下的注意力权重：形状可直接验证
+        # "hook 是否抓到整段 token" 和 "CLS 是否被正确剔除"
+        attn = model.pool.last_attn
+        assert attn is not None, "注意力权重没被保存（pool.forward 未执行？）"
+        expected = model.num_tokens - 1          # 196 个 patch = 197 - 1 个 CLS
+        print(f"    注意力权重 {tuple(attn.shape)}"
+              f"（应等于 batch × patch 数 = 2 × {expected}）")
+        assert tuple(attn.shape) == (2, expected), (
+            f"注意力权重形状应为 (2, {expected})，实际 {tuple(attn.shape)} —— "
+            f"图像塔 token 数与预期不符，请核对 hook 抓到的序列"
+        )
+
     print("[3] 训练模式下主干的状态")
     model.train()
     backbone_training = model.clip.visual.training
     print(f"    mode={model.mode} -> 主干 visual.training = {backbone_training}")
-    if model.mode in ("linear", "adapter", "coop"):
+    if model.mode in ("linear", "adapter", "coop", "attn"):
         assert backbone_training is False, f"{model.mode} 模式下主干应始终处于 eval 状态！"
 
     print("[4] 数据侧预处理")
