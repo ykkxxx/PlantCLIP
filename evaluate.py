@@ -82,6 +82,21 @@ def plot_confusion_matrix(cm, class_names, save_path, normalize=True):
     plt.close()
 
 
+def restore_model_config(cfg, ckpt):
+    """用 checkpoint 里落盘的模型配置覆盖 cfg["model"]。
+
+    CoOp 的 n_ctx、Adapter 的瓶颈宽度等超参数若与训练时不一致，
+    load_state_dict 会直接形状不匹配。以训练时落盘的配置为准，
+    评估与诊断脚本就不必重复传训练用过的命令行参数。
+    """
+    saved = ckpt.get("config", {}).get("model", {})
+    for key in ("mode", "clip_backbone", "n_ctx", "ctx_init",
+                "adapter_bottleneck", "adapter_alpha", "dropout"):
+        if key in saved:
+            cfg["model"][key] = saved[key]
+    return cfg
+
+
 def append_summary(path, row):
     """把一行结果写入汇总 CSV（列名取并集，并按 experiment+split 去重覆盖）。"""
     os.makedirs(os.path.dirname(str(path)), exist_ok=True)
@@ -147,14 +162,7 @@ def main():
 
     # ---------------- 模型与权重 ----------------
     ckpt = torch.load(ckpt_path, map_location=device)
-    # 以 checkpoint 里落盘的模型配置为准重建模型：CoOp 的 n_ctx、Adapter 的
-    # 瓶颈宽度等若与训练时不一致，load_state_dict 会直接形状不匹配。
-    # 这样评估时不必重复传训练用过的命令行参数。
-    saved_model_cfg = ckpt.get("config", {}).get("model", {})
-    for key in ("mode", "clip_backbone", "n_ctx", "ctx_init",
-                "adapter_bottleneck", "adapter_alpha", "dropout"):
-        if key in saved_model_cfg:
-            cfg["model"][key] = saved_model_cfg[key]
+    restore_model_config(cfg, ckpt)
 
     model = build_model(cfg, num_classes, class_names).to(device)
     model.load_state_dict(ckpt["model_state_dict"])
