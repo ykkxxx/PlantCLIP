@@ -1,0 +1,8 @@
+{
+  "experiment": "clip_finetune",
+  "model": "clip",
+  "epochs_run": 10,
+  "best_epoch": 9,
+  "best_val_acc": 0.9984041247237908,
+  "elapsed_seconds": 1733.8
+}

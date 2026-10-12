@@ -1,0 +1,41 @@
+[2026-10-05 15:55:28] ============================================================
+[2026-10-05 15:55:28] 实验名称 : clip_finetune
+[2026-10-05 15:55:28] 配置文件 : configs/clip_finetune.yaml
+[2026-10-05 15:55:28] 运行设备 : cuda
+[2026-10-05 15:55:28] GPU      : NVIDIA GeForce RTX 4090
+[2026-10-05 15:55:28] ============================================================
+[2026-10-05 15:55:28] 类别数（由数据推断）: 38
+[2026-10-05 15:55:32] 可训练参数: 86,212,134 / 149,640,231 （57.61%）
+[2026-10-05 15:55:32] 分类头单独分组: 主干 lr=1.00e-05 / 头 lr=1.00e-04 （主干 302 个张量，头 2 个张量）
+[2026-10-05 15:55:32] 模型: clip | 优化器: adamw | lr: 1e-05 | epochs: 10 | batch: 64 | warmup: 1 | early_stop: 3
+[2026-10-05 15:55:32] TensorBoard 已启用: /root/PlantCLIP/logs/clip_finetune
+[2026-10-05 15:58:25] Epoch   1/10 | train_loss 0.5145 train_acc 0.8930 | val_loss 0.0619 val_acc 0.9855 | lr 1.00e-05
+[2026-10-05 15:58:25]   ↳ 保存 best 模型（val_acc=0.9855）
+[2026-10-05 16:01:18] Epoch   2/10 | train_loss 0.1058 train_acc 0.9703 | val_loss 0.0312 val_acc 0.9934 | lr 1.00e-05
+[2026-10-05 16:01:19]   ↳ 保存 best 模型（val_acc=0.9934）
+[2026-10-05 16:04:12] Epoch   3/10 | train_loss 0.0757 train_acc 0.9783 | val_loss 0.0263 val_acc 0.9925 | lr 9.70e-06
+[2026-10-05 16:07:05] Epoch   4/10 | train_loss 0.0608 train_acc 0.9822 | val_loss 0.0237 val_acc 0.9931 | lr 8.83e-06
+[2026-10-05 16:09:58] Epoch   5/10 | train_loss 0.0456 train_acc 0.9862 | val_loss 0.0142 val_acc 0.9957 | lr 7.50e-06
+[2026-10-05 16:09:59]   ↳ 保存 best 模型（val_acc=0.9957）
+[2026-10-05 16:12:52] Epoch   6/10 | train_loss 0.0388 train_acc 0.9880 | val_loss 0.0113 val_acc 0.9973 | lr 5.87e-06
+[2026-10-05 16:12:53]   ↳ 保存 best 模型（val_acc=0.9973）
+[2026-10-05 16:15:46] Epoch   7/10 | train_loss 0.0262 train_acc 0.9922 | val_loss 0.0105 val_acc 0.9971 | lr 4.13e-06
+[2026-10-05 16:18:38] Epoch   8/10 | train_loss 0.0213 train_acc 0.9937 | val_loss 0.0058 val_acc 0.9982 | lr 2.50e-06
+[2026-10-05 16:18:39]   ↳ 保存 best 模型（val_acc=0.9982）
+[2026-10-05 16:21:32] Epoch   9/10 | train_loss 0.0178 train_acc 0.9948 | val_loss 0.0066 val_acc 0.9984 | lr 1.17e-06
+[2026-10-05 16:21:33]   ↳ 保存 best 模型（val_acc=0.9984）
+[2026-10-05 16:24:25] Epoch  10/10 | train_loss 0.0154 train_acc 0.9956 | val_loss 0.0060 val_acc 0.9982 | lr 3.02e-07
+[2026-10-05 16:24:25] 训练结束：用时 1733.8s，best epoch=9，best val_acc=0.9984
+[2026-10-05 16:24:25] 训练历史已保存: /root/PlantCLIP/results/clip_finetune/history.csv
+[2026-10-05 16:24:26] 训练曲线已保存至: /root/PlantCLIP/results/clip_finetune
+[2026-10-05 16:24:26] best 模型: /root/PlantCLIP/checkpoints/clip_finetune/best_model.pth
+[2026-10-05 16:24:26] 下一步评估: python evaluate.py --config configs/clip_finetune.yaml
+[2026-10-05 16:27:17] ============================================================
+[2026-10-05 16:27:17] 评估实验 : clip_finetune | 划分: test | 设备: cuda
+[2026-10-05 16:27:17] checkpoint: /root/PlantCLIP/checkpoints/clip_finetune/best_model.pth
+[2026-10-05 16:27:17] ============================================================
+[2026-10-05 16:27:23] 已加载权重：epoch=9 val_acc=0.9984041247237908
+[2026-10-05 16:27:38] 分类报告已保存: /root/PlantCLIP/results/clip_finetune/classification_report_test.txt
+[2026-10-05 16:27:40] 混淆矩阵已保存: /root/PlantCLIP/results/clip_finetune/confusion_matrix_test.png
+[2026-10-05 16:27:40] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 16:27:40] Accuracy=0.9984 | macro-F1=0.9975 | weighted-F1=0.9984

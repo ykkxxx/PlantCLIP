@@ -1,0 +1,72 @@
+[2026-09-14 12:56:30] ============================================================
+[2026-09-14 12:56:30] 实验名称 : resnet50
+[2026-09-14 12:56:30] 配置文件 : configs/resnet50.yaml
+[2026-09-14 12:56:30] 运行设备 : cuda
+[2026-09-14 12:56:30] GPU      : NVIDIA GeForce RTX 4090
+[2026-09-14 12:56:30] ============================================================
+[2026-09-14 13:03:03] ============================================================
+[2026-09-14 13:03:03] 实验名称 : resnet50
+[2026-09-14 13:03:03] 配置文件 : configs/resnet50.yaml
+[2026-09-14 13:03:03] 运行设备 : cuda
+[2026-09-14 13:03:03] GPU      : NVIDIA GeForce RTX 4090
+[2026-09-14 13:03:03] ============================================================
+[2026-09-14 13:03:04] 类别数（由数据推断）: 38
+[2026-09-14 13:06:36] ============================================================
+[2026-09-14 13:06:36] 实验名称 : resnet50
+[2026-09-14 13:06:36] 配置文件 : configs/resnet50.yaml
+[2026-09-14 13:06:36] 运行设备 : cuda
+[2026-09-14 13:06:36] GPU      : NVIDIA GeForce RTX 4090
+[2026-09-14 13:06:36] ============================================================
+[2026-09-14 13:06:36] 类别数（由数据推断）: 38
+[2026-09-14 13:06:37] 模型: resnet50 | 优化器: adam | lr: 0.001 | epochs: 50 | batch: 64 | early_stop: 10
+[2026-09-14 13:06:37] TensorBoard 已启用: /root/PlantCLIP/logs/resnet50
+[2026-09-14 13:07:36] Epoch   1/50 | train_loss 0.2617 train_acc 0.9221 | val_loss 0.3485 val_acc 0.8934 | lr 1.00e-03
+[2026-09-14 13:07:37]   ↳ 保存 best 模型（val_acc=0.8934）
+[2026-09-14 13:08:34] Epoch   2/50 | train_loss 0.1093 train_acc 0.9659 | val_loss 0.1502 val_acc 0.9497 | lr 9.99e-04
+[2026-09-14 13:08:34]   ↳ 保存 best 模型（val_acc=0.9497）
+[2026-09-14 13:09:32] Epoch   3/50 | train_loss 0.0859 train_acc 0.9723 | val_loss 0.2749 val_acc 0.9171 | lr 9.96e-04
+[2026-09-14 13:10:30] Epoch   4/50 | train_loss 0.0823 train_acc 0.9733 | val_loss 0.0919 val_acc 0.9700 | lr 9.91e-04
+[2026-09-14 13:10:30]   ↳ 保存 best 模型（val_acc=0.9700）
+[2026-09-14 13:11:28] Epoch   5/50 | train_loss 0.0761 train_acc 0.9756 | val_loss 0.1850 val_acc 0.9408 | lr 9.84e-04
+[2026-09-14 13:12:25] Epoch   6/50 | train_loss 0.0714 train_acc 0.9777 | val_loss 0.0782 val_acc 0.9735 | lr 9.76e-04
+[2026-09-14 13:12:25]   ↳ 保存 best 模型（val_acc=0.9735）
+[2026-09-14 13:13:23] Epoch   7/50 | train_loss 0.0657 train_acc 0.9796 | val_loss 0.2318 val_acc 0.9305 | lr 9.65e-04
+[2026-09-14 13:14:21] Epoch   8/50 | train_loss 0.0682 train_acc 0.9798 | val_loss 0.0714 val_acc 0.9772 | lr 9.52e-04
+[2026-09-14 13:14:21]   ↳ 保存 best 模型（val_acc=0.9772）
+[2026-09-14 13:15:19] Epoch   9/50 | train_loss 0.0625 train_acc 0.9803 | val_loss 0.2358 val_acc 0.9278 | lr 9.38e-04
+[2026-09-14 13:16:16] Epoch  10/50 | train_loss 0.0550 train_acc 0.9823 | val_loss 0.0948 val_acc 0.9703 | lr 9.22e-04
+[2026-09-14 13:17:14] Epoch  11/50 | train_loss 0.0568 train_acc 0.9822 | val_loss 0.0668 val_acc 0.9789 | lr 9.05e-04
+[2026-09-14 13:17:14]   ↳ 保存 best 模型（val_acc=0.9789）
+[2026-09-14 13:18:12] Epoch  12/50 | train_loss 0.0556 train_acc 0.9821 | val_loss 0.0807 val_acc 0.9731 | lr 8.85e-04
+[2026-09-14 13:19:10] Epoch  13/50 | train_loss 0.0487 train_acc 0.9853 | val_loss 0.0700 val_acc 0.9773 | lr 8.64e-04
+[2026-09-14 13:20:08] Epoch  14/50 | train_loss 0.0449 train_acc 0.9861 | val_loss 0.0779 val_acc 0.9759 | lr 8.42e-04
+[2026-09-14 13:21:06] Epoch  15/50 | train_loss 0.0429 train_acc 0.9866 | val_loss 0.1023 val_acc 0.9654 | lr 8.19e-04
+[2026-09-14 13:22:03] Epoch  16/50 | train_loss 0.0419 train_acc 0.9871 | val_loss 0.0538 val_acc 0.9820 | lr 7.94e-04
+[2026-09-14 13:22:03]   ↳ 保存 best 模型（val_acc=0.9820）
+[2026-09-14 13:23:01] Epoch  17/50 | train_loss 0.0436 train_acc 0.9864 | val_loss 0.0226 val_acc 0.9945 | lr 7.68e-04
+[2026-09-14 13:23:01]   ↳ 保存 best 模型（val_acc=0.9945）
+[2026-09-14 13:23:59] Epoch  18/50 | train_loss 0.0388 train_acc 0.9882 | val_loss 0.0564 val_acc 0.9811 | lr 7.41e-04
+[2026-09-14 13:24:57] Epoch  19/50 | train_loss 0.0364 train_acc 0.9894 | val_loss 0.0352 val_acc 0.9881 | lr 7.13e-04
+[2026-09-14 13:25:54] Epoch  20/50 | train_loss 0.0341 train_acc 0.9901 | val_loss 0.0469 val_acc 0.9849 | lr 6.84e-04
+[2026-09-14 13:26:52] Epoch  21/50 | train_loss 0.0325 train_acc 0.9902 | val_loss 0.0501 val_acc 0.9850 | lr 6.55e-04
+[2026-09-14 13:27:50] Epoch  22/50 | train_loss 0.0303 train_acc 0.9908 | val_loss 0.0351 val_acc 0.9902 | lr 6.24e-04
+[2026-09-14 13:28:48] Epoch  23/50 | train_loss 0.0278 train_acc 0.9920 | val_loss 0.0586 val_acc 0.9797 | lr 5.94e-04
+[2026-09-14 13:29:45] Epoch  24/50 | train_loss 0.0275 train_acc 0.9924 | val_loss 0.0401 val_acc 0.9886 | lr 5.63e-04
+[2026-09-14 13:30:43] Epoch  25/50 | train_loss 0.0257 train_acc 0.9924 | val_loss 0.0419 val_acc 0.9880 | lr 5.31e-04
+[2026-09-14 13:31:41] Epoch  26/50 | train_loss 0.0219 train_acc 0.9942 | val_loss 0.0236 val_acc 0.9930 | lr 5.00e-04
+[2026-09-14 13:32:38] Epoch  27/50 | train_loss 0.0225 train_acc 0.9937 | val_loss 0.0264 val_acc 0.9917 | lr 4.69e-04
+[2026-09-14 13:32:38] Early stopping：验证集连续 10 轮未提升，在 epoch 27 提前停止
+[2026-09-14 13:32:38] 训练结束：用时 1561.5s，best epoch=17，best val_acc=0.9945
+[2026-09-14 13:32:38] 训练历史已保存: /root/PlantCLIP/results/resnet50/history.csv
+[2026-09-14 13:32:39] 训练曲线已保存至: /root/PlantCLIP/results/resnet50
+[2026-09-14 13:32:39] best 模型: /root/PlantCLIP/checkpoints/resnet50/best_model.pth
+[2026-09-14 13:32:39] 下一步评估: python evaluate.py --config configs/resnet50.yaml
+[2026-09-14 13:49:57] ============================================================
+[2026-09-14 13:49:57] 评估实验 : resnet50 | 划分: test | 设备: cuda
+[2026-09-14 13:49:57] checkpoint: /root/PlantCLIP/checkpoints/resnet50/best_model.pth
+[2026-09-14 13:49:57] ============================================================
+[2026-09-14 13:49:58] 已加载权重：epoch=17 val_acc=0.9944758163515836
+[2026-09-14 13:50:06] 分类报告已保存: /root/PlantCLIP/results/resnet50/classification_report_test.txt
+[2026-09-14 13:50:09] 混淆矩阵已保存: /root/PlantCLIP/results/resnet50/confusion_matrix_test.png
+[2026-09-14 13:50:09] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-09-14 13:50:09] Accuracy=0.9925 | macro-F1=0.9867 | weighted-F1=0.9924

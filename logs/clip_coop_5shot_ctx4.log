@@ -1,0 +1,96 @@
+[2026-10-05 17:54:36] ============================================================
+[2026-10-05 17:54:36] 实验名称 : clip_coop_5shot_ctx4
+[2026-10-05 17:54:36] 配置文件 : configs/clip_coop.yaml
+[2026-10-05 17:54:36] 运行设备 : cuda
+[2026-10-05 17:54:36] GPU      : NVIDIA GeForce RTX 4090
+[2026-10-05 17:54:36] ============================================================
+[2026-10-05 17:54:36] 类别数（由数据推断）: 38
+[2026-10-05 17:54:36] 少样本设定：训练集每类 5 张，共 190 张（验证/测试集仍为全量）
+[2026-10-05 17:54:40] 可训练参数: 2,049 / 149,622,785 （0.00%）
+[2026-10-05 17:54:40] 模型: clip coop(n_ctx=4) | 优化器: adamw | lr: 0.002 | epochs: 50 | batch: 16 | warmup: 1 | early_stop: 15
+[2026-10-05 17:54:40] TensorBoard 已启用: /root/PlantCLIP/logs/clip_coop_5shot_ctx4
+[2026-10-05 17:54:58] Epoch   1/50 | train_loss 3.0044 train_acc 0.1158 | val_loss 2.7201 val_acc 0.2200 | lr 2.00e-03
+[2026-10-05 17:54:59]   ↳ 保存 best 模型（val_acc=0.2200）
+[2026-10-05 17:55:17] Epoch   2/50 | train_loss 2.7742 train_acc 0.1789 | val_loss 2.4660 val_acc 0.2739 | lr 2.00e-03
+[2026-10-05 17:55:18]   ↳ 保存 best 模型（val_acc=0.2739）
+[2026-10-05 17:55:36] Epoch   3/50 | train_loss 2.5800 train_acc 0.2368 | val_loss 2.2927 val_acc 0.3205 | lr 2.00e-03
+[2026-10-05 17:55:36]   ↳ 保存 best 模型（val_acc=0.3205）
+[2026-10-05 17:55:55] Epoch   4/50 | train_loss 2.4420 train_acc 0.2526 | val_loss 2.1392 val_acc 0.3642 | lr 1.99e-03
+[2026-10-05 17:55:56]   ↳ 保存 best 模型（val_acc=0.3642）
+[2026-10-05 17:56:14] Epoch   5/50 | train_loss 2.3673 train_acc 0.2895 | val_loss 2.1948 val_acc 0.3289 | lr 1.98e-03
+[2026-10-05 17:56:32] Epoch   6/50 | train_loss 2.2301 train_acc 0.3053 | val_loss 1.9880 val_acc 0.3718 | lr 1.97e-03
+[2026-10-05 17:56:33]   ↳ 保存 best 模型（val_acc=0.3718）
+[2026-10-05 17:56:51] Epoch   7/50 | train_loss 2.1168 train_acc 0.3421 | val_loss 1.9641 val_acc 0.3715 | lr 1.95e-03
+[2026-10-05 17:57:09] Epoch   8/50 | train_loss 2.2647 train_acc 0.2842 | val_loss 1.8989 val_acc 0.4169 | lr 1.93e-03
+[2026-10-05 17:57:10]   ↳ 保存 best 模型（val_acc=0.4169）
+[2026-10-05 17:57:28] Epoch   9/50 | train_loss 2.0431 train_acc 0.3632 | val_loss 1.8644 val_acc 0.4240 | lr 1.90e-03
+[2026-10-05 17:57:29]   ↳ 保存 best 模型（val_acc=0.4240）
+[2026-10-05 17:57:47] Epoch  10/50 | train_loss 2.0889 train_acc 0.3526 | val_loss 1.9688 val_acc 0.3728 | lr 1.87e-03
+[2026-10-05 17:58:05] Epoch  11/50 | train_loss 1.9649 train_acc 0.4000 | val_loss 1.8233 val_acc 0.4352 | lr 1.84e-03
+[2026-10-05 17:58:06]   ↳ 保存 best 模型（val_acc=0.4352）
+[2026-10-05 17:58:24] Epoch  12/50 | train_loss 2.1776 train_acc 0.2789 | val_loss 1.8408 val_acc 0.4067 | lr 1.80e-03
+[2026-10-05 17:58:42] Epoch  13/50 | train_loss 1.9331 train_acc 0.3842 | val_loss 1.7943 val_acc 0.4168 | lr 1.76e-03
+[2026-10-05 17:59:01] Epoch  14/50 | train_loss 1.9272 train_acc 0.4263 | val_loss 1.7497 val_acc 0.4616 | lr 1.72e-03
+[2026-10-05 17:59:01]   ↳ 保存 best 模型（val_acc=0.4616）
+[2026-10-05 17:59:20] Epoch  15/50 | train_loss 1.7833 train_acc 0.4211 | val_loss 1.6810 val_acc 0.4764 | lr 1.67e-03
+[2026-10-05 17:59:21]   ↳ 保存 best 模型（val_acc=0.4764）
+[2026-10-05 17:59:38] Epoch  16/50 | train_loss 1.7858 train_acc 0.4316 | val_loss 1.7200 val_acc 0.4628 | lr 1.62e-03
+[2026-10-05 17:59:57] Epoch  17/50 | train_loss 1.8146 train_acc 0.4263 | val_loss 1.6408 val_acc 0.4871 | lr 1.57e-03
+[2026-10-05 17:59:57]   ↳ 保存 best 模型（val_acc=0.4871）
+[2026-10-05 18:00:16] Epoch  18/50 | train_loss 1.8027 train_acc 0.4368 | val_loss 1.6678 val_acc 0.4824 | lr 1.52e-03
+[2026-10-05 18:00:34] Epoch  19/50 | train_loss 1.8622 train_acc 0.4263 | val_loss 1.6449 val_acc 0.4896 | lr 1.46e-03
+[2026-10-05 18:00:34]   ↳ 保存 best 模型（val_acc=0.4896）
+[2026-10-05 18:00:53] Epoch  20/50 | train_loss 1.6279 train_acc 0.5316 | val_loss 1.6051 val_acc 0.5026 | lr 1.40e-03
+[2026-10-05 18:00:54]   ↳ 保存 best 模型（val_acc=0.5026）
+[2026-10-05 18:01:12] Epoch  21/50 | train_loss 1.7365 train_acc 0.4789 | val_loss 1.5920 val_acc 0.5054 | lr 1.35e-03
+[2026-10-05 18:01:13]   ↳ 保存 best 模型（val_acc=0.5054）
+[2026-10-05 18:01:31] Epoch  22/50 | train_loss 1.7743 train_acc 0.4316 | val_loss 1.6386 val_acc 0.4698 | lr 1.28e-03
+[2026-10-05 18:01:49] Epoch  23/50 | train_loss 1.7430 train_acc 0.4579 | val_loss 1.5836 val_acc 0.4996 | lr 1.22e-03
+[2026-10-05 18:02:07] Epoch  24/50 | train_loss 1.6665 train_acc 0.5053 | val_loss 1.5663 val_acc 0.5182 | lr 1.16e-03
+[2026-10-05 18:02:08]   ↳ 保存 best 模型（val_acc=0.5182）
+[2026-10-05 18:02:26] Epoch  25/50 | train_loss 1.5799 train_acc 0.5158 | val_loss 1.4943 val_acc 0.5426 | lr 1.10e-03
+[2026-10-05 18:02:27]   ↳ 保存 best 模型（val_acc=0.5426）
+[2026-10-05 18:02:45] Epoch  26/50 | train_loss 1.6649 train_acc 0.4474 | val_loss 1.5707 val_acc 0.5117 | lr 1.03e-03
+[2026-10-05 18:03:03] Epoch  27/50 | train_loss 1.6283 train_acc 0.4789 | val_loss 1.5647 val_acc 0.4972 | lr 9.68e-04
+[2026-10-05 18:03:22] Epoch  28/50 | train_loss 1.6734 train_acc 0.5158 | val_loss 1.5497 val_acc 0.4998 | lr 9.04e-04
+[2026-10-05 18:03:40] Epoch  29/50 | train_loss 1.5786 train_acc 0.5211 | val_loss 1.5470 val_acc 0.5312 | lr 8.40e-04
+[2026-10-05 18:03:58] Epoch  30/50 | train_loss 1.5067 train_acc 0.5421 | val_loss 1.4735 val_acc 0.5512 | lr 7.77e-04
+[2026-10-05 18:03:59]   ↳ 保存 best 模型（val_acc=0.5512）
+[2026-10-05 18:04:17] Epoch  31/50 | train_loss 1.5915 train_acc 0.5368 | val_loss 1.4957 val_acc 0.5238 | lr 7.15e-04
+[2026-10-05 18:04:35] Epoch  32/50 | train_loss 1.5554 train_acc 0.5263 | val_loss 1.4830 val_acc 0.5538 | lr 6.55e-04
+[2026-10-05 18:04:36]   ↳ 保存 best 模型（val_acc=0.5538）
+[2026-10-05 18:04:54] Epoch  33/50 | train_loss 1.5487 train_acc 0.5526 | val_loss 1.4263 val_acc 0.5728 | lr 5.95e-04
+[2026-10-05 18:04:55]   ↳ 保存 best 模型（val_acc=0.5728）
+[2026-10-05 18:05:13] Epoch  34/50 | train_loss 1.4574 train_acc 0.5684 | val_loss 1.4243 val_acc 0.5728 | lr 5.37e-04
+[2026-10-05 18:05:31] Epoch  35/50 | train_loss 1.5602 train_acc 0.5632 | val_loss 1.4721 val_acc 0.5474 | lr 4.82e-04
+[2026-10-05 18:05:49] Epoch  36/50 | train_loss 1.4170 train_acc 0.6158 | val_loss 1.4029 val_acc 0.5664 | lr 4.28e-04
+[2026-10-05 18:06:07] Epoch  37/50 | train_loss 1.5012 train_acc 0.5526 | val_loss 1.4125 val_acc 0.5696 | lr 3.77e-04
+[2026-10-05 18:06:26] Epoch  38/50 | train_loss 1.4802 train_acc 0.5579 | val_loss 1.4084 val_acc 0.5757 | lr 3.28e-04
+[2026-10-05 18:06:26]   ↳ 保存 best 模型（val_acc=0.5757）
+[2026-10-05 18:06:45] Epoch  39/50 | train_loss 1.4044 train_acc 0.6053 | val_loss 1.4063 val_acc 0.5831 | lr 2.82e-04
+[2026-10-05 18:06:46]   ↳ 保存 best 模型（val_acc=0.5831）
+[2026-10-05 18:07:04] Epoch  40/50 | train_loss 1.4837 train_acc 0.5316 | val_loss 1.4315 val_acc 0.5694 | lr 2.39e-04
+[2026-10-05 18:07:22] Epoch  41/50 | train_loss 1.3840 train_acc 0.6263 | val_loss 1.4353 val_acc 0.5594 | lr 1.99e-04
+[2026-10-05 18:07:40] Epoch  42/50 | train_loss 1.3749 train_acc 0.6053 | val_loss 1.4184 val_acc 0.5678 | lr 1.62e-04
+[2026-10-05 18:07:58] Epoch  43/50 | train_loss 1.2877 train_acc 0.6632 | val_loss 1.4043 val_acc 0.5750 | lr 1.29e-04
+[2026-10-05 18:08:16] Epoch  44/50 | train_loss 1.4327 train_acc 0.6105 | val_loss 1.3992 val_acc 0.5755 | lr 9.90e-05
+[2026-10-05 18:08:34] Epoch  45/50 | train_loss 1.3127 train_acc 0.6263 | val_loss 1.3979 val_acc 0.5762 | lr 7.31e-05
+[2026-10-05 18:08:52] Epoch  46/50 | train_loss 1.3423 train_acc 0.6474 | val_loss 1.4009 val_acc 0.5765 | lr 5.09e-05
+[2026-10-05 18:09:10] Epoch  47/50 | train_loss 1.3742 train_acc 0.6211 | val_loss 1.4007 val_acc 0.5716 | lr 3.27e-05
+[2026-10-05 18:09:29] Epoch  48/50 | train_loss 1.4059 train_acc 0.5947 | val_loss 1.3980 val_acc 0.5723 | lr 1.84e-05
+[2026-10-05 18:09:47] Epoch  49/50 | train_loss 1.3671 train_acc 0.6421 | val_loss 1.3981 val_acc 0.5735 | lr 8.21e-06
+[2026-10-05 18:10:05] Epoch  50/50 | train_loss 1.4070 train_acc 0.5947 | val_loss 1.3981 val_acc 0.5737 | lr 2.05e-06
+[2026-10-05 18:10:05] 训练结束：用时 925.2s，best epoch=39，best val_acc=0.5831
+[2026-10-05 18:10:05] 训练历史已保存: /root/PlantCLIP/results/clip_coop_5shot_ctx4/history.csv
+[2026-10-05 18:10:06] 训练曲线已保存至: /root/PlantCLIP/results/clip_coop_5shot_ctx4
+[2026-10-05 18:10:06] best 模型: /root/PlantCLIP/checkpoints/clip_coop_5shot_ctx4/best_model.pth
+[2026-10-05 18:10:06] 下一步评估: python evaluate.py --config configs/clip_coop.yaml
+[2026-10-05 18:10:10] ============================================================
+[2026-10-05 18:10:10] 评估实验 : clip_coop_5shot_ctx4 | 划分: test | 设备: cuda
+[2026-10-05 18:10:10] checkpoint: /root/PlantCLIP/checkpoints/clip_coop_5shot_ctx4/best_model.pth
+[2026-10-05 18:10:10] ============================================================
+[2026-10-05 18:10:14] 已加载权重：epoch=39 val_acc=0.5831082739995089
+[2026-10-05 18:10:30] 分类报告已保存: /root/PlantCLIP/results/clip_coop_5shot_ctx4/classification_report_test.txt
+[2026-10-05 18:10:32] 混淆矩阵已保存: /root/PlantCLIP/results/clip_coop_5shot_ctx4/confusion_matrix_test.png
+[2026-10-05 18:10:32] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 18:10:32] Accuracy=0.5819 | macro-F1=0.5304 | weighted-F1=0.5774

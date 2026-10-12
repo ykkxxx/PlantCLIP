@@ -1,0 +1,8 @@
+{
+  "experiment": "clip_coop_5shot_ctx4",
+  "model": "clip",
+  "epochs_run": 50,
+  "best_epoch": 39,
+  "best_val_acc": 0.5831082739995089,
+  "elapsed_seconds": 925.2
+}

@@ -1,0 +1,8 @@
+{
+  "experiment": "vit_b16",
+  "model": "vit_b_16",
+  "epochs_run": 12,
+  "best_epoch": 2,
+  "best_val_acc": 0.9798674195924381,
+  "elapsed_seconds": 1856.6
+}

@@ -1,0 +1,48 @@
+==================================================================================
+Classification Report
+==================================================================================
+Overall Accuracy  : 0.7653
+Macro    P/R/F1   : 0.7188 / 0.7506 / 0.7104
+Weighted P/R/F1   : 0.7959 / 0.7653 / 0.7657
+----------------------------------------------------------------------------------
+class                                      precision    recall        f1       acc
+----------------------------------------------------------------------------------
+Apple___Apple_scab                            0.6714    0.4947    0.5697    0.4947
+Apple___Black_rot                             0.8333    0.6989    0.7602    0.6989
+Apple___Cedar_apple_rust                      0.4853    0.7857    0.6000    0.7857
+Apple___healthy                               0.6831    0.9553    0.7966    0.9553
+Blueberry___healthy                           0.7474    0.9690    0.8439    0.9690
+Cherry_(including_sour)___Powdery_mildew      0.7799    0.7848    0.7823    0.7848
+Cherry_(including_sour)___healthy             0.6629    0.9219    0.7712    0.9219
+Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot    0.6316    0.4675    0.5373    0.4675
+Corn_(maize)___Common_rust_                   0.9309    0.9777    0.9537    0.9777
+Corn_(maize)___Northern_Leaf_Blight           0.7405    0.7959    0.7672    0.7959
+Corn_(maize)___healthy                        1.0000    0.9829    0.9914    0.9829
+Grape___Black_rot                             0.6603    0.9774    0.7882    0.9774
+Grape___Esca_(Black_Measles)                  0.8982    0.7212    0.8000    0.7212
+Grape___Leaf_blight_(Isariopsis_Leaf_Spot)    0.8848    0.9012    0.8930    0.9012
+Grape___healthy                               0.8485    0.8750    0.8615    0.8750
+Orange___Haunglongbing_(Citrus_greening)      0.9827    0.9649    0.9737    0.9649
+Peach___Bacterial_spot                        0.9329    0.8895    0.9107    0.8895
+Peach___healthy                               0.7576    0.9259    0.8333    0.9259
+Pepper,_bell___Bacterial_spot                 0.8643    0.8121    0.8374    0.8121
+Pepper,_bell___healthy                        0.8444    0.8597    0.8520    0.8597
+Potato___Early_blight                         0.4502    0.8733    0.5941    0.8733
+Potato___Late_blight                          0.5158    0.6533    0.5765    0.6533
+Potato___healthy                              0.2609    0.7826    0.3913    0.7826
+Raspberry___healthy                           0.5684    0.9818    0.7200    0.9818
+Soybean___healthy                             0.9481    0.8388    0.8901    0.8388
+Squash___Powdery_mildew                       0.9844    0.9130    0.9474    0.9130
+Strawberry___Leaf_scorch                      0.8910    0.8323    0.8607    0.8323
+Strawberry___healthy                          0.9783    0.6522    0.7826    0.6522
+Tomato___Bacterial_spot                       0.7437    0.5549    0.6355    0.5549
+Tomato___Early_blight                         0.2679    0.1000    0.1456    0.1000
+Tomato___Late_blight                          0.5815    0.5470    0.5637    0.5470
+Tomato___Leaf_Mold                            0.8900    0.6224    0.7325    0.6224
+Tomato___Septoria_leaf_spot                   0.6480    0.3057    0.4154    0.3057
+Tomato___Spider_mites Two-spotted_spider_mite    0.4214    0.5317    0.4702    0.5317
+Tomato___Target_Spot                          0.3861    0.5810    0.4639    0.5810
+Tomato___Tomato_Yellow_Leaf_Curl_Virus        0.9708    0.7870    0.8693    0.7870
+Tomato___Tomato_mosaic_virus                  0.2525    0.9107    0.3953    0.9107
+Tomato___healthy                              0.7143    0.2941    0.4167    0.2941
+==================================================================================

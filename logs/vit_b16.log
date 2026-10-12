@@ -1,0 +1,84 @@
+[2026-09-14 13:52:05] ============================================================
+[2026-09-14 13:52:05] 实验名称 : vit_b16
+[2026-09-14 13:52:05] 配置文件 : configs/vit_b16.yaml
+[2026-09-14 13:52:05] 运行设备 : cuda
+[2026-09-14 13:52:05] GPU      : NVIDIA GeForce RTX 4090
+[2026-09-14 13:52:05] ============================================================
+[2026-09-14 13:52:05] 类别数（由数据推断）: 38
+[2026-09-14 13:55:29] ============================================================
+[2026-09-14 13:55:29] 实验名称 : vit_b16
+[2026-09-14 13:55:29] 配置文件 : configs/vit_b16.yaml
+[2026-09-14 13:55:29] 运行设备 : cuda
+[2026-09-14 13:55:29] GPU      : NVIDIA GeForce RTX 4090
+[2026-09-14 13:55:29] ============================================================
+[2026-09-14 13:55:29] 类别数（由数据推断）: 38
+[2026-09-14 13:55:31] 模型: vit_b_16 | 优化器: adam | lr: 0.0003 | epochs: 50 | batch: 64 | early_stop: 10
+[2026-09-14 13:55:31] TensorBoard 已启用: /root/PlantCLIP/logs/vit_b16
+[2026-09-14 13:58:06] Epoch   1/50 | train_loss 0.2985 train_acc 0.9154 | val_loss 0.1241 val_acc 0.9599 | lr 3.00e-04
+[2026-09-14 13:58:07]   ↳ 保存 best 模型（val_acc=0.9599）
+[2026-09-14 14:00:41] Epoch   2/50 | train_loss 0.1266 train_acc 0.9601 | val_loss 0.0684 val_acc 0.9799 | lr 3.00e-04
+[2026-09-14 14:00:42]   ↳ 保存 best 模型（val_acc=0.9799）
+[2026-09-14 14:03:16] Epoch   3/50 | train_loss 0.1070 train_acc 0.9656 | val_loss 0.1064 val_acc 0.9658 | lr 2.99e-04
+[2026-09-14 14:05:51] Epoch   4/50 | train_loss 0.0915 train_acc 0.9708 | val_loss 0.0746 val_acc 0.9766 | lr 2.97e-04
+[2026-09-14 14:08:26] Epoch   5/50 | train_loss 0.0900 train_acc 0.9708 | val_loss 0.0905 val_acc 0.9710 | lr 2.95e-04
+[2026-09-14 14:11:00] Epoch   6/50 | train_loss 0.0843 train_acc 0.9727 | val_loss 0.0742 val_acc 0.9762 | lr 2.93e-04
+[2026-09-14 14:13:35] Epoch   7/50 | train_loss 0.0764 train_acc 0.9757 | val_loss 0.0900 val_acc 0.9725 | lr 2.89e-04
+[2026-09-14 14:16:10] Epoch   8/50 | train_loss 0.0778 train_acc 0.9749 | val_loss 0.0920 val_acc 0.9698 | lr 2.86e-04
+[2026-09-14 14:18:44] Epoch   9/50 | train_loss 0.0691 train_acc 0.9783 | val_loss 0.0760 val_acc 0.9773 | lr 2.81e-04
+[2026-09-14 14:21:19] Epoch  10/50 | train_loss 0.0637 train_acc 0.9797 | val_loss 0.0688 val_acc 0.9783 | lr 2.77e-04
+[2026-09-14 14:23:54] Epoch  11/50 | train_loss 0.0634 train_acc 0.9788 | val_loss 0.0603 val_acc 0.9797 | lr 2.71e-04
+[2026-09-14 14:26:28] Epoch  12/50 | train_loss 0.0608 train_acc 0.9803 | val_loss 0.0692 val_acc 0.9764 | lr 2.66e-04
+[2026-09-14 14:26:28] Early stopping：验证集连续 10 轮未提升，在 epoch 12 提前停止
+[2026-09-14 14:26:28] 训练结束：用时 1856.6s，best epoch=2，best val_acc=0.9799
+[2026-09-14 14:26:28] 训练历史已保存: /root/PlantCLIP/results/vit_b16/history.csv
+[2026-09-14 14:26:29] 训练曲线已保存至: /root/PlantCLIP/results/vit_b16
+[2026-09-14 14:26:29] best 模型: /root/PlantCLIP/checkpoints/vit_b16/best_model.pth
+[2026-09-14 14:26:29] 下一步评估: python evaluate.py --config configs/vit_b16.yaml
+[2026-09-14 14:30:36] ============================================================
+[2026-09-14 14:30:36] 评估实验 : vit_b16 | 划分: test | 设备: cuda
+[2026-09-14 14:30:36] checkpoint: /root/PlantCLIP/checkpoints/vit_b16/best_model.pth
+[2026-09-14 14:30:36] ============================================================
+[2026-09-14 14:30:38] 已加载权重：epoch=2 val_acc=0.9798674195924381
+[2026-09-14 14:30:53] 分类报告已保存: /root/PlantCLIP/results/vit_b16/classification_report_test.txt
+[2026-09-14 14:30:57] 混淆矩阵已保存: /root/PlantCLIP/results/vit_b16/confusion_matrix_test.png
+[2026-09-14 14:30:57] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-09-14 14:30:57] Accuracy=0.9788 | macro-F1=0.9700 | weighted-F1=0.9783
+[2026-10-05 14:44:55] ============================================================
+[2026-10-05 14:44:55] 实验名称 : vit_b16
+[2026-10-05 14:44:55] 配置文件 : configs/vit_b16.yaml
+[2026-10-05 14:44:55] 运行设备 : cuda
+[2026-10-05 14:44:55] GPU      : NVIDIA GeForce RTX 4090
+[2026-10-05 14:44:55] ============================================================
+[2026-10-05 14:44:55] 类别数（由数据推断）: 38
+[2026-10-05 14:44:57] 分类头单独分组: 主干 lr=1.00e-05 / 头 lr=1.00e-04 （主干 150 个张量，头 2 个张量）
+[2026-10-05 14:44:57] 模型: vit_b_16 | 优化器: adamw | lr: 1e-05 | epochs: 50 | batch: 64 | warmup: 5 | early_stop: 15
+[2026-10-05 14:44:57] TensorBoard 已启用: /root/PlantCLIP/logs/vit_b16
+[2026-10-05 14:47:33] Epoch   1/50 | train_loss 1.4454 train_acc 0.7075 | val_loss 0.4750 val_acc 0.9349 | lr 2.00e-06
+[2026-10-05 14:47:33]   ↳ 保存 best 模型（val_acc=0.9349）
+[2026-10-05 14:50:08] Epoch   2/50 | train_loss 0.2000 train_acc 0.9725 | val_loss 0.1104 val_acc 0.9817 | lr 4.00e-06
+[2026-10-05 14:50:08]   ↳ 保存 best 模型（val_acc=0.9817）
+[2026-10-05 14:52:43] Epoch   3/50 | train_loss 0.0650 train_acc 0.9887 | val_loss 0.0529 val_acc 0.9883 | lr 6.00e-06
+[2026-10-05 14:52:44]   ↳ 保存 best 模型（val_acc=0.9883）
+[2026-10-05 14:55:18] Epoch   4/50 | train_loss 0.0359 train_acc 0.9925 | val_loss 0.0433 val_acc 0.9872 | lr 8.00e-06
+[2026-10-05 14:57:53] Epoch   5/50 | train_loss 0.0261 train_acc 0.9937 | val_loss 0.0314 val_acc 0.9908 | lr 1.00e-05
+[2026-10-05 14:57:54]   ↳ 保存 best 模型（val_acc=0.9908）
+[2026-10-05 15:00:29] Epoch   6/50 | train_loss 0.0162 train_acc 0.9963 | val_loss 0.0172 val_acc 0.9958 | lr 1.00e-05
+[2026-10-05 15:00:29]   ↳ 保存 best 模型（val_acc=0.9958）
+[2026-10-05 15:44:33] ============================================================
+[2026-10-05 15:44:33] 评估实验 : vit_b16 | 划分: val | 设备: cuda
+[2026-10-05 15:44:33] checkpoint: /root/PlantCLIP/checkpoints/vit_b16/best_model.pth
+[2026-10-05 15:44:33] ============================================================
+[2026-10-05 15:44:35] 已加载权重：epoch=6 val_acc=0.9958261723545299
+[2026-10-05 15:44:48] 分类报告已保存: /root/PlantCLIP/results/vit_b16/classification_report_val.txt
+[2026-10-05 15:44:50] 混淆矩阵已保存: /root/PlantCLIP/results/vit_b16/confusion_matrix_val.png
+[2026-10-05 15:44:50] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:44:50] Accuracy=0.9958 | macro-F1=0.9913 | weighted-F1=0.9959
+[2026-10-05 15:46:32] ============================================================
+[2026-10-05 15:46:32] 评估实验 : vit_b16 | 划分: test | 设备: cuda
+[2026-10-05 15:46:32] checkpoint: /root/PlantCLIP/checkpoints/vit_b16/best_model.pth
+[2026-10-05 15:46:32] ============================================================
+[2026-10-05 15:46:35] 已加载权重：epoch=6 val_acc=0.9958261723545299
+[2026-10-05 15:46:48] 分类报告已保存: /root/PlantCLIP/results/vit_b16/classification_report_test.txt
+[2026-10-05 15:46:50] 混淆矩阵已保存: /root/PlantCLIP/results/vit_b16/confusion_matrix_test.png
+[2026-10-05 15:46:50] 实验汇总已更新: /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:46:50] Accuracy=0.9956 | macro-F1=0.9941 | weighted-F1=0.9956

@@ -1,0 +1,61 @@
+[2026-10-05 15:10:41] ============================================================
+[2026-10-05 15:10:41] CLIP zero-shot | 实验: clip_zeroshot | 划分: test | 设备: cuda
+[2026-10-05 15:10:41] ============================================================
+[2026-10-05 15:10:41] 类别数: 38
+[2026-10-05 15:10:41] [调试] 只使用前 256 张图
+[2026-10-05 15:10:41] 每类模板数: 3
+[2026-10-05 15:10:41]   Apple___Apple_scab  ->  a photo of an apple leaf with apple scab
+[2026-10-05 15:10:41]   Apple___Black_rot  ->  a photo of an apple leaf with black rot
+[2026-10-05 15:17:13] ============================================================
+[2026-10-05 15:17:13] CLIP zero-shot | 实验: clip_zeroshot | 划分: test | 设备: cuda
+[2026-10-05 15:17:13] ============================================================
+[2026-10-05 15:17:13] 类别数: 38
+[2026-10-05 15:17:13] [调试] 只使用前 256 张图
+[2026-10-05 15:17:13] 每类模板数: 3
+[2026-10-05 15:17:13]   Apple___Apple_scab  ->  a photo of an apple leaf with apple scab
+[2026-10-05 15:17:13]   Apple___Black_rot  ->  a photo of an apple leaf with black rot
+[2026-10-05 15:17:54] CLIP 主干: ViT-B-32 | 预训练: openai
+[2026-10-05 15:17:57] 分类报告: /root/PlantCLIP/results/clip_zeroshot/classification_report_test.txt
+[2026-10-05 15:17:57] 混淆矩阵: /root/PlantCLIP/results/clip_zeroshot/confusion_matrix_test.png
+[2026-10-05 15:17:57] 汇总表  : /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:17:57] Accuracy=0.0000 | macro-F1=0.0000 | weighted-F1=0.0000
+[2026-10-05 15:18:17] ============================================================
+[2026-10-05 15:18:17] CLIP zero-shot | 实验: clip_zeroshot | 划分: test | 设备: cuda
+[2026-10-05 15:18:17] ============================================================
+[2026-10-05 15:18:17] 类别数: 38
+[2026-10-05 15:18:17] 每类模板数: 3
+[2026-10-05 15:18:17]   Apple___Apple_scab  ->  a photo of an apple leaf with apple scab
+[2026-10-05 15:18:17]   Apple___Black_rot  ->  a photo of an apple leaf with black rot
+[2026-10-05 15:18:21] CLIP 主干: ViT-B-32 | 预训练: openai
+[2026-10-05 15:18:28] 分类报告: /root/PlantCLIP/results/clip_zeroshot/classification_report_test.txt
+[2026-10-05 15:18:28] 混淆矩阵: /root/PlantCLIP/results/clip_zeroshot/confusion_matrix_test.png
+[2026-10-05 15:18:28] 汇总表  : /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:18:28] Accuracy=0.1452 | macro-F1=0.1078 | weighted-F1=0.1336
+[2026-10-05 15:22:38] ============================================================
+[2026-10-05 15:22:38] CLIP zero-shot | 实验: clip_zeroshot | 划分: test | 设备: cuda
+[2026-10-05 15:22:38] ============================================================
+[2026-10-05 15:22:38] 类别数: 38
+[2026-10-05 15:22:38] 每类模板数: 3
+[2026-10-05 15:22:38]   Apple___Apple_scab  ->  a photo of an apple leaf with apple scab
+[2026-10-05 15:22:38]   Apple___Black_rot  ->  a photo of an apple leaf with black rot
+[2026-10-05 15:22:42] CLIP 主干: ViT-B-32 | 预训练: openai
+[2026-10-05 15:22:42] 类别文本特征平均两两相似度: 0.7741（正常应远小于 1）
+[2026-10-05 15:22:47] 预测覆盖类别数: 34/38（远小于类别总数说明模型退化地只预测少数几类）
+[2026-10-05 15:22:49] 分类报告: /root/PlantCLIP/results/clip_zeroshot/classification_report_test.txt
+[2026-10-05 15:22:49] 混淆矩阵: /root/PlantCLIP/results/clip_zeroshot/confusion_matrix_test.png
+[2026-10-05 15:22:49] 汇总表  : /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:22:49] Accuracy=0.1550 | macro-F1=0.1226 | weighted-F1=0.1342
+[2026-10-05 15:40:07] ============================================================
+[2026-10-05 15:40:07] CLIP zero-shot | 实验: clip_zeroshot | 划分: test | 设备: cuda
+[2026-10-05 15:40:07] ============================================================
+[2026-10-05 15:40:07] 类别数: 38
+[2026-10-05 15:40:07] 每类模板数: 3
+[2026-10-05 15:40:07]   Apple___Apple_scab  ->  a photo of an apple leaf with apple scab
+[2026-10-05 15:40:07]   Apple___Black_rot  ->  a photo of an apple leaf with black rot
+[2026-10-05 15:40:45] CLIP 主干: ViT-B-16 | 预训练: openai
+[2026-10-05 15:40:45] 类别文本特征平均两两相似度: 0.7835（正常应远小于 1）
+[2026-10-05 15:40:56] 预测覆盖类别数: 34/38（远小于类别总数说明模型退化地只预测少数几类）
+[2026-10-05 15:40:58] 分类报告: /root/PlantCLIP/results/clip_zeroshot/classification_report_test.txt
+[2026-10-05 15:40:58] 混淆矩阵: /root/PlantCLIP/results/clip_zeroshot/confusion_matrix_test.png
+[2026-10-05 15:40:58] 汇总表  : /root/PlantCLIP/results/experiment_results.csv
+[2026-10-05 15:40:58] Accuracy=0.2012 | macro-F1=0.1497 | weighted-F1=0.1715

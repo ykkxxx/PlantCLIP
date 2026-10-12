@@ -1,0 +1,12 @@
+experiment,split,model,epoch,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1
+resnet50,test,resnet50,17,0.9925,0.9918,0.9826,0.9867,0.9926,0.9925,0.9924
+clip_zeroshot,test,clip-ViT-B-16-zeroshot,0,0.2012,0.2588,0.1974,0.1497,0.407,0.2012,0.1715
+vit_b16,val,vit_b_16,6,0.9958,0.9897,0.9938,0.9913,0.9961,0.9958,0.9959
+vit_b16,test,vit_b_16,6,0.9956,0.9937,0.9945,0.9941,0.9956,0.9956,0.9956
+clip_finetune,test,clip,9,0.9984,0.9976,0.9976,0.9975,0.9984,0.9984,0.9984
+clip_adapter_5shot,test,clip,36,0.8773,0.8519,0.8728,0.8521,0.89,0.8773,0.8798
+clip_linear_5shot,test,clip,33,0.7653,0.7188,0.7506,0.7104,0.7959,0.7653,0.7657
+clip_finetune_5shot,test,clip,39,0.8926,0.8603,0.8899,0.8666,0.9015,0.8926,0.8934
+clip_coop_5shot,test,clip,37,0.6713,0.6674,0.6654,0.6255,0.7414,0.6713,0.6747
+clip_coop_5shot_ctx4,test,clip,39,0.5819,0.5456,0.5764,0.5304,0.6312,0.5819,0.5774
+clip_attn_5shot,test,clip,27,0.7621,0.7258,0.7498,0.7177,0.7971,0.7621,0.7696
